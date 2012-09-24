@@ -69,17 +69,11 @@ The user interface for GitHub Windows is probably similar enough to the Mac vers
 
 12. When you're finished programming the feature and you've committed all of your changes, you're now ready to merge back into the `develop` branch.
 
-13. Click on the `Branches` tab.
+13. Go to your branch page located at https://github.com/$USERNAME$/capstone/tree/$FEATURENAME$.
 
-14. Click `Merge View`.
+14. Click on `Pull Request`.
 
-15. Drag your feature branch to the box on the right. Drag the `develop` branch to the box on the left.
-
-14. Click `Merge Branches`.
-
-15. The local version of the `develop` branch will now have all the changes you've made in the feature branch. Click on the `develop` branch.
-
-16. Click `Sync Branches`.
+15.
 
 Assuming there are no major conflicts, your feature should now be in the `develop` branch.
 
