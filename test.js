@@ -146,6 +146,12 @@ Circle.prototype.update = function( elapsedTime ) {
   }
 };
 
+var Weapon = function() {
+  this.firing = true;
+  this.fireRate = 0;
+  this.range = 200;
+};
+
 var Character = function( x, y, red, green, blue, alpha, radius ) {
   Circle.call( this, x, y, red, green, blue, alpha, radius );
 
@@ -192,13 +198,14 @@ Character.prototype.update = function( elapsedTime ) {
 
   if ( this.canFire && this.fireTime <= 0 ) {
     this.fireTime = this.fireRate;
-    if ( enemy !== null && enemy !== undefined )
+    if ( enemy !== null && enemy !== undefined ) {
       this.fireAt( enemy.x, enemy.y );
-    else
+    } else {
       this.fireAt(
         this.x + this.velocity.x * 50,
         this.y + this.velocity.y * 50
       );
+    }
   } else {
     this.fireTime -= elapsedTime;
   }
@@ -491,10 +498,32 @@ var Easing = (function() {
       return c * ( -Math.pow( 2, -10 * t/ d ) + 1 ) + b;
     },
 
-    easeInOutExpo: function( t, b, c, d ) {},
-    easeInCirc: function( t, b, c, d ) {},
-    easeOutCirc: function( t, b, c, d ) {},
-    easeInOutCirc: function( t, b, c, d ) {}
+    easeInOutExpo: function( t, b, c, d ) {
+      t /= d / 2;
+      if ( t < 1 )
+        return c / 2 * Math.pow( 2, 10 * ( t - 1 ) ) + b;
+      t--;
+      return c / 2 * ( - Math.pow( 2, -10 * t ) + 2 ) + b;
+    },
+
+    easeInCirc: function( t, b, c, d ) {
+      t /= d;
+      return -c * ( Math.sqrt( 1 - t * t ) - 1 ) + b;
+    },
+
+    easeOutCirc: function( t, b, c, d ) {
+      t /= d;
+      t--;
+      return c * Math.sqrt( 1 - t * t ) + b;
+    },
+
+    easeInOutCirc: function( t, b, c, d ) {
+      t /= d / 2;
+      if ( t < 1 )
+        return -c / 2 * ( Math.sqrt( 1 - t * t ) - 1 ) + b;
+      t -= 2;
+      return c / 2 * ( Math.sqrt( 1 - t * t ) + 1 ) + b;
+    }
   };
 }) ();
 
@@ -581,7 +610,7 @@ function update() {
 
 function initGame() {
   // "Good guy"
-  characters.push( new Character( 400, 400, 0, 0, 255, 1.0, 10 ) );
+  characters.push( new Character( 400, 400, 0, 0, 200, 1.0, 10 ) );
   characters[0].velocity = {
     x: 0,
     y: 0
@@ -589,7 +618,7 @@ function initGame() {
   characters[0].canFire = false;
 
   // "Bad guy"
-  characters.push( new Character( 200, 200, 255, 0, 0, 1.0, 10 ) );
+  characters.push( new Character( 200, 200, 200, 0, 0, 1.0, 10 ) );
 }
 
 function init() {
