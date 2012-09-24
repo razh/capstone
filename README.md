@@ -67,13 +67,20 @@ The user interface for GitHub Windows is probably similar enough to the Mac vers
 
 11. Click the `+` button with arrows around it and then `Commit and Sync`. You can just click Commit if you don't want to upload your changes just yet, though you'll still have to sync later.
 
-12. When you're finished programming the feature and you've committed all of your changes, you're now ready to merge back into the `develop` branch.
+Merging back into the `develop` branch
+--------------------------------------
 
-13. Go to your branch page located at https://github.com/$USERNAME$/capstone/tree/$FEATURENAME$.
+When you're finished programming the feature and you've committed all of your changes, you're now ready to merge back into the `develop` branch.
 
-14. Click on `Pull Request`.
+1. Go to your branch page located at <https://github.com/$USERNAME$/capstone/tree/$FEATURENAME$>.
 
-15.
+2. Click on `Pull Request`.
+
+3. Make sure the `base branch` is set to `develop`.
+
+4. Enter a short summary of the feature.
+
+5. Click `Send pull request`.
 
 Assuming there are no major conflicts, your feature should now be in the `develop` branch.
 
