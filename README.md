@@ -4,7 +4,7 @@ capstone
 Git reference
 -------------
 
-There are GitHub apps for Mac and Windows available. Download links follow:
+There are GitHub apps for Mac and Windows available.
 
 - [GitHub for Mac](http://mac.github.com/)
 - [GitHub for Windows](http://windows.github.com/)
@@ -14,6 +14,8 @@ We will/should be using Vincent Driessen's [Git branching model](http://nvie.com
     develop     master
        |          |
        O  <-----  O
+       |          |
+       O          |
        |          |
        O          |
        |          |
@@ -33,21 +35,7 @@ In addition, there are three categories of supporting branches we can create:
 - Release branches
 - Hotfix branches
 
-
-    develop     master
-       |          |
-       O  <-----  O
-       |          |
-       O          |
-       |          |
-       O  ----->  O
-       |          |
-
-
-Feature branches are what you're going to be working on most of the time.
-
-
-As for hotfix branches, we will not have to use them hopefully.
+Since we're not working in a production environment where we have to ship code, we're only going to be using feature branches.
 
 
 GitHub for Mac instructions
@@ -55,9 +43,34 @@ GitHub for Mac instructions
 
 The user interface for GitHub Windows is probably similar enough to the Mac version such that these instructions will be applicable for both.
 
-1. Choose the `develop` branch.
+0. Download and install the GitHub app.
 
-2. Press `Clone in Mac/Windows`.
+1. Go to the [`develop` branch](https://github.com/razh/capstone/tree/develop) of the repo.
+
+2. Click `Clone in Mac/Windows`.
+
+3. This should open up the GitHub app. Sign in with your credentials if you haven't already done so.
+
+4. Choose where to save the folder.
+
+5. Click on repo when the download is finished.
+
+6. Click on the Branches tab.
+
+7. The `develop` branch should be there. Click the `+` to create a new feature branch with your desired name (e.g. `area-weapon` or `sound-manager`). This new branch should now be the current branch.
+
+8. Make a change. Code. Program. Hack.
+
+9. Click on the Changes tab.
+
+10. Type in a commit summary. (Provide useful information on the changes you've made!)
+
+11. Click Commit and Sync (the `+` button with arrows around it) or just Commit if you don't want to upload your changes just yet. You'll still have to sync later.
+
+12. When you're finished programming the feature and you've committed all of your changes, you're now ready to merge back into the `develop` branch.
+
+13.
+
 
 Command-line instructions
 -------------------------
@@ -67,3 +80,16 @@ Branching off from the develop branch to work on something called featureName.
     git checkout -b featureName develop
 
 Merging from the featureName branch back into develop.
+
+    git checkout develop
+    git merge --no-ff featureName
+    git branch -d featureName
+    git push origin develop
+
+
+Code style
+----------
+
+- Make sure you've set your code editor to use Unix line-endings.
+- Make sure your code is formatted in a readable manner.
+- Comment your code. (Okay, I need to do that.)
