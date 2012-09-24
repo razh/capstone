@@ -65,7 +65,7 @@ The user interface for GitHub Windows is probably similar enough to the Mac vers
 
 10. Type in a commit summary. (Provide useful information on the changes you've made!)
 
-11. Click Commit and Sync (the `+` button with arrows around it) or just Commit if you don't want to upload your changes just yet. You'll still have to sync later.
+11. Click the `+` button with arrows around it and then `Commit and Sync`. You can just click Commit if you don't want to upload your changes just yet, though you'll still have to sync later.
 
 12. When you're finished programming the feature and you've committed all of your changes, you're now ready to merge back into the `develop` branch.
 
