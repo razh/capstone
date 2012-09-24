@@ -77,7 +77,9 @@ The user interface for GitHub Windows is probably similar enough to the Mac vers
 
 14. Click `Merge Branches`.
 
-15. Click `Sync Branches`.
+15. The local version of the `develop` branch will now have all the changes you've made in the feature branch. Click on the `develop` branch.
+
+16. Click `Sync Branches`.
 
 Assuming there are no major conflicts, your feature should now be in the `develop` branch.
 
