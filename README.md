@@ -73,7 +73,7 @@ The user interface for GitHub Windows is probably similar enough to the Mac vers
 
 14. Click `Merge View`.
 
-15. Drag your feature branch to the box on the left. Drag the `develop` branch to the box on the right.
+15. Drag your feature branch to the box on the right. Drag the `develop` branch to the box on the left.
 
 14. Click `Merge Branches`.
 
