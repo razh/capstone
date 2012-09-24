@@ -55,13 +55,13 @@ The user interface for GitHub Windows is probably similar enough to the Mac vers
 
 5. Click on repo when the download is finished.
 
-6. Click on the Branches tab.
+6. Click on the `Branches` tab.
 
 7. The `develop` branch should be there. Click the `+` to create a new feature branch with your desired name (e.g. `area-weapon` or `sound-manager`). This new branch should now be the current branch.
 
 8. Make a change. Code. Program. Hack.
 
-9. Click on the Changes tab.
+9. Click on the `Changes` tab.
 
 10. Type in a commit summary. (Provide useful information on the changes you've made!)
 
@@ -69,7 +69,13 @@ The user interface for GitHub Windows is probably similar enough to the Mac vers
 
 12. When you're finished programming the feature and you've committed all of your changes, you're now ready to merge back into the `develop` branch.
 
-13.
+13. Click on the `Branches` tab.
+
+14. Click `Merge View`.
+
+15. Drag your feature branch to the box on the left. Drag the `develop` branch to the box on the right.
+
+14. Click `Merge Branches`.
 
 
 Command-line instructions
