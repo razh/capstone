@@ -77,6 +77,10 @@ The user interface for GitHub Windows is probably similar enough to the Mac vers
 
 14. Click `Merge Branches`.
 
+15. Click `Sync Branches`.
+
+Assuming there are no major conflicts, your feature should now be in the `develop` branch.
+
 
 Command-line instructions
 -------------------------
