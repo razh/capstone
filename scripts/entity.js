@@ -24,6 +24,11 @@ Entity.prototype.getY = function() {
   return this.y;
 };
 
+Entity.prototype.setXY = function( x, y ) {
+  this.x = x;
+  this.y = y;
+};
+
 Entity.prototype.setVelocity = function( vx, vy ) {
   this.velocity.x = vx;
   this.velocity.y = vy;
@@ -171,10 +176,10 @@ Character.prototype.getNearestEntity = function( entities ) {
 };
 
 Character.prototype.distanceToEntity = function( entity ) {
-  return Math.sqrt( ( this.getX() - entity.getX() ) *
-                    ( this.getX() - entity.getX() ) +
-                    ( this.getY() - entity.getY() ) *
-                    ( this.getY() - entity.getY() ) );
+  return Math.sqrt( ( this.x - entity.getX() ) *
+                    ( this.x - entity.getX() ) +
+                    ( this.y - entity.getY() ) *
+                    ( this.y - entity.getY() ) );
 };
 
 Character.prototype.hit = function() {
