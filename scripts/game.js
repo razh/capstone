@@ -21,6 +21,7 @@ var Game = function() {
   this._effects     = [];
 };
 
+// Add entities.
 Game.prototype.addCharacter = function( character ) {
   this._characters.push( character );
 };
@@ -33,7 +34,7 @@ Game.prototype.addEffect = function( effect ) {
   this._effects.push( effect );
 };
 
-
+// Remove entities.
 Game.prototype.removeCharacter = function( character ) {
   removeFromArray( character, this._characters );
 };
@@ -46,12 +47,12 @@ Game.prototype.removeEffect = function( effect ) {
   removeFromArray( effect, this._effects );
 };
 
-
+// Getters.
 Game.prototype.getCharacters = function() {
   return this._characters;
 };
 
-
+// Update functions.
 Game.prototype.update = function() {
   this._currTime = Date.now();
   var elapsedTime = this._currTime - this._prevTime;
@@ -82,7 +83,7 @@ Game.prototype.tick = function() {
   this.draw();
 };
 
-
+// Drawing functions.
 Game.prototype.draw = function() {
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
@@ -100,7 +101,7 @@ Game.prototype.drawProjectiles = function() {
     this._projectiles[i].draw( this._ctx );
 };
 
-
+// Initialize game object.
 Game.prototype.init = function() {
   var char0 = new Character( 400, 400, 0, 0, 200, 1.0, 10 );
   char0.setVelocity( 0, 0 );

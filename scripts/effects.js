@@ -61,7 +61,6 @@ Effect.prototype.update = function( elapsedTime ) {
 var Easing = (function() {
   return {
     linear: function( t, b, c, d ) {
-      // console.log( "t: " + t + ", b: " + b + ', c: ' + c + ", d: " + d + ", x: " + (c * t / d + b) );
       return c * t / d + b;
     },
 
