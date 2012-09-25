@@ -154,24 +154,18 @@ Circle.prototype.update = function( elapsedTime ) {
   }
 };
 
-var Weapon = function() {
-  this.firing = true;
-  this.fireRate = 0;
-  this.range = 200;
-};
-
 var Character = function( x, y, red, green, blue, alpha, radius ) {
   Circle.call( this, x, y, red, green, blue, alpha, radius );
 
-  this.canFire = true;
-  this.fireTime = 0;
-  this.fireRate = 200;
+  this.firing      = true;
+  this.fireTime    = 0;
+  this.fireRate    = 200;
   this.bulletSpeed = 0.5;
 
   this.health = 100;
 
-  this.isHit = false;
-  this.hitTime = 0;
+  this.isHit     = false;
+  this.hitTime   = 0;
   this.hitLength = 100;
 };
 
@@ -204,7 +198,7 @@ Character.prototype.update = function( elapsedTime ) {
     }
   }
 
-  if ( this.canFire && this.fireTime <= 0 ) {
+  if ( this.firing && this.fireTime <= 0 ) {
     this.fireTime = this.fireRate;
     if ( enemy !== null && enemy !== undefined ) {
       this.fireAt( enemy.x, enemy.y );
@@ -623,7 +617,7 @@ function initGame() {
     x: 0,
     y: 0
   };
-  characters[0].canFire = false;
+  characters[0].firing = false;
 
   // "Bad guy"
   characters.push( new Character( 200, 200, 200, 0, 0, 1.0, 10 ) );
