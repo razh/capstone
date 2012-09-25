@@ -120,22 +120,6 @@ var Character = function( x, y, red, green, blue, alpha, radius ) {
 Character.prototype = new Circle();
 Character.prototype.constructor = Character;
 
-Character.prototype.fireAt = function( x, y ) {
-  var bullet = new Bullet( this.x, this.y, 0, 0, 0, 1.0, 2, this.team );
-
-  bullet.velocity.x = x - this.x;
-  bullet.velocity.y = y - this.y;
-
-  var magnitude = Math.sqrt( bullet.velocity.x *
-                             bullet.velocity.x +
-                             bullet.velocity.y *
-                             bullet.velocity.y );
-  bullet.velocity.x /= magnitude / this.bulletSpeed;
-  bullet.velocity.y /= magnitude / this.bulletSpeed;
-
-  _game.addProjectile( bullet );
-};
-
 Character.prototype.update = function( elapsedTime ) {
   Circle.prototype.update.call( this, elapsedTime );
 
