@@ -55,7 +55,7 @@ Terrain.prototype.toString = function() {
 
 var canvas;
 var contex;
-var width = 800;
+var width  = 800;
 var height = 600;
 var trackMouse = false;
 // TODO: Not really WebGL right now.
@@ -101,12 +101,12 @@ function draw() {
 
 
 var Effect = function( object, properties, duration, easing, step, complete ) {
-  this.object = object;
+  this.object     = object;
   this.properties = properties;
-  this.duration = duration;
-  this.easing = easing;
-  this.step = step;
-  this.complete = complete;
+  this.duration   = duration;
+  this.easing     = easing;
+  this.step       = step;
+  this.complete   = complete;
 
   this.begin = {};
   for ( var key in this.properties )
@@ -125,7 +125,7 @@ Effect.prototype.update = function( elapsedTime ) {
       this.object[ key ] = this.begin[ key ] + this.properties[ key ];
 
     removeFromArray( this, effects );
-    if ( this.complete !== null ) {
+    if ( this.complete !== null && this.complete !== undefined ) {
       var effect = this.complete.call( this.object ).effect;
       if ( effect !== null && effect !== undefined ) {
         effects.push( effect );
@@ -383,6 +383,7 @@ function initGame() {
 
   // "Bad guy"
   characters.push( new Character( 200, 200, 200, 0, 0, 1.0, 10 ) );
+  characters[1].setTeam(1);
 }
 
 function init() {

@@ -1,12 +1,7 @@
 // Entity ----------------------------------------------------------------------
-var Entity = function( x, y, red, green, blue, alpha ) {
+var Entity = function( x, y ) {
   this.x = x;
   this.y = y;
-
-  this.red   = red;
-  this.green = green;
-  this.blue  = blue;
-  this.alpha = alpha;
 
   this.lifeTime = 0;
 
@@ -35,9 +30,20 @@ Entity.prototype.setVelocity = function( vx, vy ) {
 };
 
 
+// Shape -----------------------------------------------------------------------
+var Shape = function( x, y, red, green, blue, alpha ) {
+  Entity.call( this, x, y );
+
+  this.red   = red;
+  this.green = green;
+  this.blue  = blue;
+  this.alpha = alpha;
+};
+
+
 // Circle ----------------------------------------------------------------------
 var Circle = function( x, y, red, green, blue, alpha, radius ) {
-  Entity.call( this, x, y, red, green, blue, alpha );
+  Shape.call( this, x, y, red, green, blue, alpha );
   this.radius = radius;
 
   this.lifeTime = 0;
@@ -102,13 +108,15 @@ var Character = function( x, y, red, green, blue, alpha, radius ) {
   this.isHit     = false;
   this.hitTime   = 0;
   this.hitLength = 100;
+
+  this.team = 0;
 };
 
 Character.prototype = new Circle();
 Character.prototype.constructor = Character;
 
 Character.prototype.fireAt = function( x, y ) {
-  var bullet = new Bullet( this.x, this.y, 0, 0, 0, 1.0, 2, this );
+  var bullet = new Bullet( this.x, this.y, 0, 0, 0, 1.0, 2, this.team );
 
   bullet.velocity.x = x - this.x;
   bullet.velocity.y = y - this.y;
@@ -163,10 +171,10 @@ Character.prototype.getNearestEntity = function( entities ) {
 };
 
 Character.prototype.distanceToEntity = function( entity ) {
-  return Math.sqrt( ( this.x - entity.x ) *
-                    ( this.x - entity.x ) +
-                    ( this.y - entity.y ) *
-                    ( this.y - entity.y ) );
+  return Math.sqrt( ( this.getX() - entity.getX() ) *
+                    ( this.getX() - entity.getX() ) +
+                    ( this.getY() - entity.getY() ) *
+                    ( this.getY() - entity.getY() ) );
 };
 
 Character.prototype.hit = function() {
@@ -206,4 +214,12 @@ Character.prototype.hit = function() {
       )
     );
   }
+};
+
+Character.prototype.setTeam = function( team ) {
+  this.team = team;
+};
+
+Character.prototype.getTeam = function() {
+  return this.team;
 };
