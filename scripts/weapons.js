@@ -1,8 +1,9 @@
 // Weapon ----------------------------------------------------------------------
-var Weapon = function( team, damage, rate, range ) {
-  this.team   = team;
+var Weapon = function( entity, damage, rate, range ) {
   this.firing = true;
   this.time   = 0;
+
+  this.entity = entity;
   this.rate   = rate;
   this.range  = range;
 };
@@ -16,11 +17,79 @@ Weapon.prototype.update = function( elapsedTime ) {
 };
 
 
+// Gun -------------------------------------------------------------------------
+var Gun = function( entity, damage, rate, range, speed ) {
+  Weapon.call( this, entity, damage, rate, range );
+
+  this.speed  = speed;
+  this.target = {
+    x: Number.NaN,
+    y: Number.NaN
+  };
+};
+
+Gun.prototype = new Weapon();
+Gun.prototype.constructor = Gun;
+
+Gun.prototype.update = function( elapsedTime ) {
+  Weapon.prototype.update.call( this, elapsedTime );
+  if ( this.firing && this.hasTarget() ) {
+    this.fire();
+  }
+};
+
+Gun.prototype.fire = function() {
+  // console.log( this.entity.x );
+  var bullet = new Bullet(
+    this.entity.x,
+    this.entity.y,
+    0,
+    0,
+    0,
+    1.0,
+    2,
+    this.entity.team
+  );
+
+  bullet.velocity.x = this.target.x - this.entity.x;
+  bullet.velocity.y = this.target.y - this.entity.y;
+
+  var magnitude = Math.sqrt( bullet.velocity.x *
+                             bullet.velocity.x +
+                             bullet.velocity.y *
+                             bullet.velocity.y );
+  bullet.velocity.x /= magnitude / this.speed;
+  bullet.velocity.y /= magnitude / this.speed;
+
+  _game.addProjectile( bullet );
+
+  this.firing = false;
+};
+
+Gun.prototype.setTarget = function( x, y ) {
+  this.target.x = x;
+  this.target.y = y;
+};
+
+Gun.prototype.setEntityAsTarget = function( entity ) {
+  if ( entity !== null && entity !== undefined ) {
+    this.setTarget( entity.getX(), entity.getY() );
+  } else {
+    this.setTarget( Number.NaN, Number.NaN );
+  }
+};
+
+Gun.prototype.hasTarget = function() {
+  return !Number.isNaN( this.target.x ) && !Number.isNaN( this.target.y );
+};
+
+
 // Bullet ----------------------------------------------------------------------
 var Bullet = function( x, y, red, green, blue, alpha, radius, team ) {
   Circle.call( this, x, y, red, green, blue, alpha, radius );
-  this.team = team;
+
   this.collides = true;
+  this.team     = team;
 };
 
 Bullet.prototype = new Circle();
@@ -76,59 +145,4 @@ Bullet.prototype.update = function( elapsedTime ) {
       )
     );
   }
-};
-
-
-// Gun -------------------------------------------------------------------------
-var Gun = function( team, damage, rate, range, speed ) {
-  Weapon.call( this, team, damage, rate, range );
-
-  this.speed  = speed;
-  this.target = {
-    x: Number.NaN,
-    y: Number.NaN
-  };
-};
-
-Gun.prototype = new Weapon();
-Gun.prototype.constructor = Gun;
-
-Gun.prototype.update = function( elapsedTime ) {
-  Weapon.prototype.update.call( this, elapsedTime );
-  if ( this.firing && this.hasTarget() ) {
-    this.fire();
-  }
-};
-
-Gun.prototype.fire = function() {
-  var bullet = new Bullet( this.x, this.y, 0, 0, 0, 1.0, 2, this );
-
-  bullet.velocity.x = x - this.x;
-  bullet.velocity.y = y - this.y;
-
-  var magnitude = Math.sqrt( bullet.velocity.x *
-                             bullet.velocity.x +
-                             bullet.velocity.y *
-                             bullet.velocity.y );
-  bullet.velocity.x /= magnitude / this.bulletSpeed;
-  bullet.velocity.y /= magnitude / this.bulletSpeed;
-
-  _game.addBullet( bullet );
-};
-
-Gun.prototype.setTarget = function( x, y ) {
-  this.target.x = x;
-  this.target.y = y;
-};
-
-Gun.prototype.setEntityAsTarget = function( entity ) {
-  if ( entity !== null && entity !== undefined ) {
-    this.setTarget( entity.getX(), entity.getY() );
-  } else {
-    this.setTarget( Number.NaN, Number.NaN );
-  }
-};
-
-Gun.prototype.hasTarget = function() {
-  return !isNaN( this.target.x ) && !isNan( this.target.y );
 };

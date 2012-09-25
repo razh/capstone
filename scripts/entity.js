@@ -101,12 +101,12 @@ Circle.prototype.draw = function( ctx ) {
 var Character = function( x, y, red, green, blue, alpha, radius ) {
   Circle.call( this, x, y, red, green, blue, alpha, radius );
 
-  this.weapon = null;
+  this.weapon = new Gun( this, 1, 200, 100, 0.5 );
 
-  this.firing      = true;
-  this.fireTime    = 0;
-  this.fireRate    = 200;
-  this.bulletSpeed = 0.5;
+  // this.firing      = true;
+  // this.fireTime    = 0;
+  // this.fireRate    = 200;
+  // this.bulletSpeed = 0.5;
 
   this.health = 100;
 
@@ -139,21 +139,12 @@ Character.prototype.fireAt = function( x, y ) {
 Character.prototype.update = function( elapsedTime ) {
   Circle.prototype.update.call( this, elapsedTime );
 
-  // Find nearest enemy.
-  var enemy = this.getNearestEntity( _game.getCharacters() );
 
-  if ( this.firing && this.fireTime <= 0 ) {
-    this.fireTime = this.fireRate;
-    if ( enemy !== null && enemy !== undefined ) {
-      this.fireAt( enemy.x, enemy.y );
-    } else {
-      this.fireAt(
-        this.x + this.velocity.x * 50,
-        this.y + this.velocity.y * 50
-      );
-    }
-  } else {
-    this.fireTime -= elapsedTime;
+  if ( this.weapon !== null ) {
+    var enemy = this.getNearestEntity( _game.getCharacters() );
+
+    this.weapon.setEntityAsTarget( enemy );
+    this.weapon.update( elapsedTime );
   }
 };
 
