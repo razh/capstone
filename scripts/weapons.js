@@ -81,7 +81,10 @@ Bullet.prototype.update = function( elapsedTime ) {
 // Gun -------------------------------------------------------------------------
 var Gun = function( damage, rate, range ) {
   Weapon.call( this, damage, rate, range );
-  this.target = null;
+  this.target = {
+    x: 0,
+    y: 0
+  };
 };
 
 Gun.prototype = new Weapon();
@@ -94,7 +97,8 @@ Gun.prototype.update = function( elapsedTime ) {
   }
 };
 
-Gun.prototype.setTarget = function( entity ) {
-  this.target = entity;
+Gun.prototype.setEntityAsTarget = function( entity ) {
+  this.target.x = entity.getX();
+  this.target.y = entity.getY();
 };
 

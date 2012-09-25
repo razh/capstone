@@ -21,6 +21,19 @@ Entity.prototype.update = function( elapsedTime ) {
   this.y += elapsedTime * this.velocity.y;
 };
 
+Entity.prototype.getX = function() {
+  return this.x;
+};
+
+Entity.prototype.getY = function() {
+  return this.y;
+};
+
+Entity.prototype.setVelocity = function( vx, vy ) {
+  this.velocity.x = vx;
+  this.velocity.y = vy;
+};
+
 
 // Circle ----------------------------------------------------------------------
 var Circle = function( x, y, red, green, blue, alpha, radius ) {
@@ -77,6 +90,8 @@ Circle.prototype.draw = function( ctx ) {
 var Character = function( x, y, red, green, blue, alpha, radius ) {
   Circle.call( this, x, y, red, green, blue, alpha, radius );
 
+  this.weapon = null;
+
   this.firing      = true;
   this.fireTime    = 0;
   this.fireRate    = 200;
@@ -110,13 +125,9 @@ Character.prototype.fireAt = function( x, y ) {
 
 Character.prototype.update = function( elapsedTime ) {
   Circle.prototype.update.call( this, elapsedTime );
-  // Find enemy.
-  var enemy;
-  for ( var i = characters.length - 1; i >= 0; i-- ) {
-    if ( characters[i] !== this ) {
-      enemy = characters[i];
-    }
-  }
+
+  // Find nearest enemy.
+  var enemy = this.getNearestEntity( characters );
 
   if ( this.firing && this.fireTime <= 0 ) {
     this.fireTime = this.fireRate;
@@ -131,6 +142,31 @@ Character.prototype.update = function( elapsedTime ) {
   } else {
     this.fireTime -= elapsedTime;
   }
+};
+
+Character.prototype.getNearestEntity = function( entities ) {
+  var entity;
+  var distance = Number.MAX_VALUE;
+  var min      = Number.MAX_VALUE;
+
+  for ( var i = entities.length - 1; i >= 0; i-- ) {
+    if ( this !== entities[i] ) {
+      distance = this.distanceToEntity( entities[i] );
+      if ( distance < min ) {
+        min = distance;
+        entity = entities[i];
+      }
+    }
+  }
+
+  return entity;
+};
+
+Character.prototype.distanceToEntity = function( entity ) {
+  return Math.sqrt( ( this.x - entity.x ) *
+                    ( this.x - entity.x ) +
+                    ( this.y - entity.y ) *
+                    ( this.y - entity.y ) );
 };
 
 Character.prototype.hit = function() {
