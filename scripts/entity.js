@@ -65,16 +65,16 @@ Circle.prototype.update = function( elapsedTime ) {
     this.x = this.radius;
     this.velocity.x = -this.velocity.x;
   }
-  if ( this.x + this.radius > width ) {
-    this.x = width - this.radius;
+  if ( this.x + this.radius > _game.WIDTH ) {
+    this.x = _game.WIDTH - this.radius;
     this.velocity.x = -this.velocity.x;
   }
   if ( this.radius > this.y ) {
     this.y = this.radius;
     this.velocity.y = -this.velocity.y;
   }
-  if ( this.y + this.radius > height ) {
-    this.y = height - this.radius;
+  if ( this.y + this.radius > _game.HEIGHT ) {
+    this.y = _game.HEIGHT - this.radius;
     this.velocity.y = -this.velocity.y;
   }
 };
@@ -133,14 +133,14 @@ Character.prototype.fireAt = function( x, y ) {
   bullet.velocity.x /= magnitude / this.bulletSpeed;
   bullet.velocity.y /= magnitude / this.bulletSpeed;
 
-  bullets.push( bullet );
+  _game.addProjectile( bullet );
 };
 
 Character.prototype.update = function( elapsedTime ) {
   Circle.prototype.update.call( this, elapsedTime );
 
   // Find nearest enemy.
-  var enemy = this.getNearestEntity( characters );
+  var enemy = this.getNearestEntity( _game.getCharacters() );
 
   if ( this.firing && this.fireTime <= 0 ) {
     this.fireTime = this.fireRate;
@@ -186,7 +186,7 @@ Character.prototype.hit = function() {
   if ( !this.isHit ) {
     this.isHit = true;
     // Effects chain. Nasty syntax, but it works.
-    effects.push(
+    _game.addEffect(
       new Effect(
         this,
         {

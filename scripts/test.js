@@ -53,44 +53,42 @@ Terrain.prototype.toString = function() {
   }
 };
 
-var canvas;
-var contex;
-var width  = 800;
-var height = 600;
+// var canvas;
+// var contex;
+// var width  = 800;
+// var height = 600;
 var trackMouse = false;
 // TODO: Not really WebGL right now.
-function initWebGL() {
-  canvas = document.getElementById( "test" );
-  canvas.width = width;
-  canvas.height = height;
+// function initWebGL() {
+//   canvas = document.getElementById( "test" );
+//   canvas.width = width;
+//   canvas.height = height;
 
-  contex = canvas.getContext( "2d" );
+//   contex = canvas.getContext( "2d" );
 
-  canvas.addEventListener( 'mousedown', onMouseDown );
-  canvas.addEventListener( 'mousemove', onMouseMove );
-}
+//   canvas.addEventListener( 'mousedown', onMouseDown );
+//   canvas.addEventListener( 'mousemove', onMouseMove );
+// }
 
 function onMouseMove( event ) {
-  event.pageX -= canvas.offsetLeft;
-  event.pageY -= canvas.offsetTop;
+  event.pageX -= _game._canvas.offsetLeft;
+  event.pageY -= _game._canvas.offsetTop;
 
   if ( trackMouse ) {
-    characters[0].x = event.pageX;
-    characters[0].y = event.pageY;
+    _game._characters[0].setXY( event.pageX, event.pageY )
   }
 }
 
 function onMouseDown( event ) {
-  event.pageX -= canvas.offsetLeft;
-  event.pageY -= canvas.offsetTop;
+  event.pageX -= _game._canvas.offsetLeft;
+  event.pageY -= _game._canvas.offsetTop;
 
   trackMouse = !trackMouse;
   if ( trackMouse ) {
-    canvas.style.cursor = 'none';
-    characters[0].x = event.pageX;
-    characters[0].y = event.pageY;
+    _game._canvas.style.cursor = 'none';
+    _game._characters[0].setXY( event.pageX, event.pageY );
   } else {
-    canvas.style.cursor = 'default';
+    _game._canvas.style.cursor = 'default';
   }
 }
 
@@ -101,9 +99,9 @@ function draw() {
 
 // var easingFunctions = new Easing();
 
-var characters = [];
-var bullets = [];
-var effects = [];
+// var characters = [];
+// var bullets = [];
+// var effects = [];
 
 window.requestAnimFrame = (function() {
   return window.requestAnimationFrame       ||
@@ -116,26 +114,26 @@ window.requestAnimFrame = (function() {
          };
 })();
 
-function drawCanvas() {
-  update();
-  contex.clearRect( 0, 0, width, height );
+// function drawCanvas() {
+//   update();
+//   contex.clearRect( 0, 0, width, height );
 
-  // contex.fillStyle = 'rgba( 200, 200, 200, 1.0 )';
-  // contex.fillRect( 0, 0, width, height );
+//   // contex.fillStyle = 'rgba( 200, 200, 200, 1.0 )';
+//   // contex.fillRect( 0, 0, width, height );
 
-  // Draw characters.
-  var i;
-  for ( i = characters.length - 1; i >= 0; i-- ) {
-    characters[i].draw( contex );
-  }
+//   // Draw characters.
+//   var i;
+//   for ( i = characters.length - 1; i >= 0; i-- ) {
+//     characters[i].draw( contex );
+//   }
 
-  // Draw bullets.
-  for ( i = bullets.length - 1; i >= 0; i-- ) {
-    bullets[i].draw( contex );
-  }
+//   // Draw bullets.
+//   for ( i = bullets.length - 1; i >= 0; i-- ) {
+//     bullets[i].draw( contex );
+//   }
 
-  requestAnimFrame( drawCanvas );
-}
+//   requestAnimFrame( drawCanvas );
+// }
 
 
 function inArray( elem, array ) {
@@ -156,49 +154,63 @@ function direction( x0, y0, x1, y1 ) {
   return Math.atan2( y1 - y0, x1 - x0 );
 }
 
-var prevTime = Date.now();
-var currTime;
+// var prevTime = Date.now();
+// var currTime;
 
-function update() {
-  currTime = Date.now();
-  var elapsedTime = currTime - prevTime;
-  prevTime = currTime;
+// function update() {
+//   currTime = Date.now();
+//   var elapsedTime = currTime - prevTime;
+//   prevTime = currTime;
 
-  // Update characters.
-  var i;
-  for ( i = characters.length - 1; i >= 0; i-- ) {
-    characters[i].update( elapsedTime );
-  }
+//   // Update characters.
+//   var i;
+//   for ( i = characters.length - 1; i >= 0; i-- ) {
+//     characters[i].update( elapsedTime );
+//   }
 
-  // Update bullets.
-  for ( i = bullets.length - 1; i >= 0; i-- ) {
-    bullets[i].update( elapsedTime );
-  }
+//   // Update bullets.
+//   for ( i = bullets.length - 1; i >= 0; i-- ) {
+//     bullets[i].update( elapsedTime );
+//   }
 
-  for ( i = effects.length - 1; i >= 0; i-- ) {
-    effects[i].update( elapsedTime );
-  }
-}
+//   for ( i = effects.length - 1; i >= 0; i-- ) {
+//     effects[i].update( elapsedTime );
+//   }
+// }
 
-function initGame() {
-  // "Good guy"
-  characters.push( new Character( 400, 400, 0, 0, 200, 1.0, 10 ) );
-  characters[0].velocity = {
-    x: 0,
-    y: 0
-  };
-  characters[0].firing = false;
+// function initGame() {
+//   // "Good guy"
+//   characters.push( new Character( 400, 400, 0, 0, 200, 1.0, 10 ) );
+//   characters[0].velocity = {
+//     x: 0,
+//     y: 0
+//   };
+//   characters[0].firing = false;
 
-  // "Bad guy"
-  characters.push( new Character( 200, 200, 200, 0, 0, 1.0, 10 ) );
-  characters[1].setTeam(1);
+//   // "Bad guy"
+//   characters.push( new Character( 200, 200, 200, 0, 0, 1.0, 10 ) );
+//   characters[1].setTeam(1);
+// }
+
+// function init() {
+//   initGame();
+//   initWebGL();
+//   console.log( "test" );
+//   drawCanvas();
+// }
+
+function loop() {
+  _game.tick();
+  requestAnimFrame( loop );
 }
 
 function init() {
-  initGame();
-  initWebGL();
-  console.log( "test" );
-  drawCanvas();
+  _game.init();
+
+  _game._canvas.addEventListener( 'mousedown', onMouseDown );
+  _game._canvas.addEventListener( 'mousemove', onMouseMove );
+
+  loop();
 }
 
 init();

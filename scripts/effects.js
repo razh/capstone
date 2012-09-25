@@ -22,11 +22,11 @@ Effect.prototype.update = function( elapsedTime ) {
     for ( key in this.properties )
       this.object[ key ] = this.begin[ key ] + this.properties[ key ];
 
-    removeFromArray( this, effects );
+    _game.removeEffect( this );
     if ( this.complete !== null && this.complete !== undefined ) {
       var effect = this.complete.call( this.object ).effect;
       if ( effect !== null && effect !== undefined ) {
-        effects.push( effect );
+        _game.addEffect( effect );
       }
     }
   } else {

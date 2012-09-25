@@ -33,6 +33,7 @@ Bullet.prototype.update = function( elapsedTime ) {
   if ( this.collides ) {
     var distance;
     var i;
+    var characters = _game.getCharacters();
     for ( i = characters.length - 1; i >= 0; i-- ) {
       if ( characters[i].getTeam() !== this.team ) {
         distance = Math.sqrt( ( this.x - characters[i].getX() ) *
@@ -56,7 +57,7 @@ Bullet.prototype.update = function( elapsedTime ) {
   if ( removeBullet ) {
     this.setVelocity( 0, 0 );
     this.collides = false;
-    effects.push(
+    _game.addEffect(
       new Effect(
         this,
         {
@@ -67,7 +68,7 @@ Bullet.prototype.update = function( elapsedTime ) {
         Easing.easeOutQuad,
         undefined,
         (function() {
-          removeFromArray( this, bullets );
+          _game.removeProjectile( this );
           return {
             effect: undefined
           };

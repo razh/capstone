@@ -33,6 +33,25 @@ Game.prototype.addEffect = function( effect ) {
   this._effects.push( effect );
 };
 
+
+Game.prototype.removeCharacter = function( character ) {
+  removeFromArray( character, this._characters );
+};
+
+Game.prototype.removeProjectile = function( projectile ) {
+  removeFromArray( projectile, this._projectiles );
+};
+
+Game.prototype.removeEffect = function( effect ) {
+  removeFromArray( effect, this._effects );
+};
+
+
+Game.prototype.getCharacters = function() {
+  return this._characters;
+};
+
+
 Game.prototype.update = function() {
   this._currTime = Date.now();
   var elapsedTime = this._currTime - this._prevTime;
@@ -58,6 +77,30 @@ Game.prototype.updateEffects = function( elapsedTime ) {
     this._effects[i].update( elapsedTime );
 };
 
+Game.prototype.tick = function() {
+  this.update();
+  this.draw();
+};
+
+
+Game.prototype.draw = function() {
+  this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
+
+  this.drawCharacters();
+  this.drawProjectiles();
+};
+
+Game.prototype.drawCharacters = function() {
+  for ( var i = this._characters.length - 1; i >= 0; i-- )
+    this._characters[i].draw( this._ctx );
+};
+
+Game.prototype.drawProjectiles = function() {
+  for ( var i = this._projectiles.length - 1; i >= 0; i-- )
+    this._projectiles[i].draw( this._ctx );
+};
+
+
 Game.prototype.init = function() {
   var char0 = new Character( 400, 400, 0, 0, 200, 1.0, 10 );
   char0.setVelocity( 0, 0 );
@@ -69,30 +112,5 @@ Game.prototype.init = function() {
   this.addCharacter( char1 );
 };
 
-Game.prototype.tick = function() {
-  this.update();
-  this.draw();
-
-  requestAnimFrame( this.tick() );
-};
-
-Game.prototype.draw = function() {
-  this.update();
-
-  this._ctx.clearRect( 0, 0, this.WIDTH, height );
-
-  this.drawCharacters();
-  this.drawBullets();
-};
-
-Game.prototype.drawCharacters = function() {
-  for ( var i = this._characters.length - 1; i >= 0; i-- )
-    this._characters[i].draw( this._ctx );
-};
-
-Game.prototype.drawBullets = function() {
-  for ( var i = this._bullets.length - 1; i >= 0; i-- )
-    this._bullets[i].draw( this._ctx );
-};
-
 var _game = new Game();
+
