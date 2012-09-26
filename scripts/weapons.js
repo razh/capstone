@@ -36,7 +36,9 @@ Weapon.prototype.setEntityAsTarget = function( entity ) {
 };
 
 Weapon.prototype.hasTarget = function() {
-  return !Number.isNaN( this.target.x ) && !Number.isNaN( this.target.y );
+  /* Cannot use isNaN() or Number.isNaN() as they are not implemented in Chrome
+     for Android. */
+  return this.target.x !== Number.NaN && this.target.y !== Number.NaN;
 };
 
 Weapon.prototype.targetInRange = function() {
