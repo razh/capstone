@@ -114,6 +114,9 @@ function direction( x0, y0, x1, y1 ) {
 
 
 function loop() {
+  if ( !running )
+    return;
+
   _game.tick();
   requestAnimFrame( loop );
 }
@@ -123,8 +126,22 @@ function init() {
 
   _game._canvas.addEventListener( 'mousedown', onMouseDown );
   _game._canvas.addEventListener( 'mousemove', onMouseMove );
+  document.addEventListener( 'keydown', (function ( event ) {
+    if ( event.keyCode === 81 )
+      quit();
+  }));
 
   loop();
 }
+
+function quit() {
+  running = false;
+
+  _game._canvas.removeEventListener( 'mousedown', onMouseDown );
+  _game._canvas.removeEventListener( 'mousemove', onMouseMove );
+
+}
+
+var running = true;
 
 init();

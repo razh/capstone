@@ -4,8 +4,14 @@ var Weapon = function( entity, damage, rate, range ) {
   this.time   = 0;
 
   this.entity = entity;
+  this.damage = damage;
   this.rate   = rate;
   this.range  = range;
+
+  this.target = {
+    x: Number.NaN,
+    y: Number.NaN
+  };
 };
 
 Weapon.prototype.update = function( elapsedTime ) {
@@ -16,16 +22,39 @@ Weapon.prototype.update = function( elapsedTime ) {
   }
 };
 
+Weapon.prototype.setTarget = function( x, y ) {
+  this.target.x = x;
+  this.target.y = y;
+};
+
+Weapon.prototype.setEntityAsTarget = function( entity ) {
+  if ( entity !== null && entity !== undefined ) {
+    this.setTarget( entity.getX(), entity.getY() );
+  } else {
+    this.setTarget( Number.NaN, Number.NaN );
+  }
+};
+
+Weapon.prototype.hasTarget = function() {
+  return !Number.isNaN( this.target.x ) && !Number.isNaN( this.target.y );
+};
+
+Weapon.prototype.targetInRange = function() {
+  if ( this.entity === null || this.entity === undefined )
+    return false;
+
+  if ( this.range === -1 )
+    return true;
+
+  return this.range >= Math.sqrt( ( this.target.x - this.entity.x ) *
+                                  ( this.target.x - this.entity.x ) +
+                                  ( this.target.y - this.entity.y ) *
+                                  ( this.target.y - this.entity.y ) );
+};
 
 // Gun -------------------------------------------------------------------------
-var Gun = function( entity, damage, rate, range, speed ) {
+var Gun = function( entity, damage, rate, range ) {
   Weapon.call( this, entity, damage, rate, range );
-
-  this.speed  = speed;
-  this.target = {
-    x: Number.NaN,
-    y: Number.NaN
-  };
 };
 
 Gun.prototype = new Weapon();
@@ -33,20 +62,33 @@ Gun.prototype.constructor = Gun;
 
 Gun.prototype.update = function( elapsedTime ) {
   Weapon.prototype.update.call( this, elapsedTime );
-  if ( this.firing && this.hasTarget() ) {
+
+  if ( this.firing && this.hasTarget() && this.targetInRange() ) {
     this.fire();
+  } else {
+    this.firing = false;
   }
 };
 
-Gun.prototype.fire = function() {
-  // console.log( this.entity.x );
+Gun.prototype.fire = function() {};
+
+
+// BulletGun -------------------------------------------------------------------
+
+var BulletGun = function( entity, damage, rate, range, speed ) {
+  Gun.call( this, entity, damage, rate, range );
+
+  this.speed  = speed;
+};
+
+BulletGun.prototype = new Gun();
+BulletGun.prototype.constructor = BulletGun;
+
+BulletGun.prototype.fire = function() {
   var bullet = new Bullet(
     this.entity.x,
     this.entity.y,
-    0,
-    0,
-    0,
-    1.0,
+    0, 0, 0, 1.0,
     2,
     this.entity.team
   );
@@ -64,23 +106,6 @@ Gun.prototype.fire = function() {
   _game.addProjectile( bullet );
 
   this.firing = false;
-};
-
-Gun.prototype.setTarget = function( x, y ) {
-  this.target.x = x;
-  this.target.y = y;
-};
-
-Gun.prototype.setEntityAsTarget = function( entity ) {
-  if ( entity !== null && entity !== undefined ) {
-    this.setTarget( entity.getX(), entity.getY() );
-  } else {
-    this.setTarget( Number.NaN, Number.NaN );
-  }
-};
-
-Gun.prototype.hasTarget = function() {
-  return !Number.isNaN( this.target.x ) && !Number.isNaN( this.target.y );
 };
 
 
@@ -146,3 +171,94 @@ Bullet.prototype.update = function( elapsedTime ) {
     );
   }
 };
+
+// LaserGun --------------------------------------------------------------------
+var LaserGun = function( entity, damage, rate, range,
+                         red, green, blue, alpha ) {
+  Gun.call( this, entity, damage, rate, range );
+
+  this.red   = red;
+  this.green = green;
+  this.blue  = blue;
+  this.alpha = alpha;
+
+  this.targetEntity = null;
+
+  this.drawingBeam = false;
+  this.beam = new LaserBeam(
+    this.entity,
+    this.target.x,
+    this.target.y,
+    this.red,
+    this.green,
+    this.blue,
+    this.alpha
+  );
+};
+
+LaserGun.prototype = new Gun();
+LaserGun.prototype.constructor = LaserGun;
+
+LaserGun.prototype.update = function( elapsedTime ) {
+  Gun.prototype.update.call( this, elapsedTime );
+
+  if ( this.drawingBeam === true && this.firing === false ) {
+    _game.removeProjectile( this.beam );
+    this.drawingBeam = false;
+  }
+};
+
+LaserGun.prototype.fire = function() {
+  var point = this.targetEntity.getIntersection( this.entity );
+  this.beam.x = point.x;
+  this.beam.y = point.y;
+
+  this.targetEntity.hit();
+
+  if ( !this.drawingBeam ) {
+    _game.addProjectile( this.beam );
+    this.drawingBeam = true;
+  }
+};
+
+LaserGun.prototype.setEntityAsTarget = function( entity ) {
+  Weapon.prototype.setEntityAsTarget.call( this, entity );
+
+  this.targetEntity = entity;
+};
+
+
+// LaserBeam -------------------------------------------------------------------
+var LaserBeam = function( entity, x, y, red, green, blue, alpha ) {
+  this.entity = entity;
+
+  this.x      = x;
+  this.y      = y;
+
+  this.red    = red;
+  this.green  = green;
+  this.blue   = blue;
+  this.alpha  = alpha;
+};
+
+LaserBeam.prototype.draw = function( ctx ) {
+  ctx.strokeStyle = 'rgba( ' + Math.round( this.red )   +
+                    ', '     + Math.round( this.green ) +
+                    ','      + Math.round( this.blue )  +
+                    ','      + this.alpha + ' )';
+  ctx.lineWidth = 3;
+
+  var point = this.entity.getIntersection({
+    x: this.x,
+    y: this.y
+  });
+
+  ctx.beginPath();
+  ctx.moveTo( point.x, point.y );
+  ctx.lineTo( this.x, this.y );
+  ctx.closePath();
+
+  ctx.stroke();
+};
+
+LaserBeam.prototype.update = function( elapsedTime ) {};
