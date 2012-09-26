@@ -184,7 +184,7 @@ Character.prototype.hit = function() {
           radius: 15,
           red: 200
         },
-        60,
+        50,
         Easing.easeInOutCubic,
         undefined,
         (function() {
