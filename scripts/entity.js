@@ -154,7 +154,7 @@ Character.prototype.getNearestEntity = function( entities ) {
   var min      = Number.MAX_VALUE;
 
   for ( var i = entities.length - 1; i >= 0; i-- ) {
-    if ( this !== entities[i] ) {
+    if ( this.team !== entities[i].team ) {
       distance = this.distanceToEntity( entities[i] );
       if ( distance < min ) {
         min = distance;
