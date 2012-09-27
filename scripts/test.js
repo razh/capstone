@@ -1,22 +1,27 @@
 var trackMouse = false;
 
 function onMouseMove( event ) {
-  event.pageX -= _game._canvas.offsetLeft;
-  event.pageY -= _game._canvas.offsetTop;
+  var mouse = {
+    x: event.pageX - _game._canvas.offsetLeft,
+    y: event.pageY - _game._canvas.offsetTop
+  };
+  // event.pageY -= _game._canvas.offsetTop;
 
   if ( trackMouse ) {
-    _game._characters[0].setXY( event.pageX, event.pageY )
+    _game._characters[0].setXY( mouse.x, mouse.y )
   }
 }
 
 function onMouseDown( event ) {
-  event.pageX -= _game._canvas.offsetLeft;
-  event.pageY -= _game._canvas.offsetTop;
+  var mouse = {
+    x: event.pageX - _game._canvas.offsetLeft,
+    y: event.pageY - _game._canvas.offsetTop
+  };
 
   trackMouse = !trackMouse;
   if ( trackMouse ) {
     _game._canvas.style.cursor = 'none';
-    _game._characters[0].setXY( event.pageX, event.pageY );
+    _game._characters[0].setXY( mouse.x, mouse.y )
   } else {
     _game._canvas.style.cursor = 'default';
   }
@@ -110,12 +115,12 @@ function loop() {
 function init() {
   _game.init();
 
-  _game._canvas.addEventListener( 'mousedown', onMouseDown );
-  _game._canvas.addEventListener( 'mousemove', onMouseMove );
+  _game._canvas.addEventListener( 'mousedown', onMouseDown, null );
+  _game._canvas.addEventListener( 'mousemove', onMouseMove, null );
   document.addEventListener( 'keydown', (function ( event ) {
     if ( event.keyCode === 81 )
       quit();
-  }));
+  }), null );
 
   loop();
 }
