@@ -6,9 +6,10 @@ var Game = function() {
   this._canvas = document.getElementById( 'test' );
   this._ctx    = this._canvas.getContext( '2d' );
 
-  this.WIDTH  = 800;
-  this.HEIGHT = 600;
+  this.WIDTH  = window.innerWidth;
+  this.HEIGHT = window.innerHeight;
 
+  // this._canvas.style.padding = '0px 0px';
   this._canvas.style.backgroundColor = '#C8C8C8';
   this._canvas.width  = this.WIDTH;
   this._canvas.height = this.HEIGHT;
