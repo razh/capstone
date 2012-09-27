@@ -18,9 +18,6 @@ function onMouseDown( event ) {
     y: event.pageY - _game._canvas.offsetTop
   };
 
-  console.log( event.pageX );
-  console.log( _game._canvas.offsetLeft );
-
   trackMouse = !trackMouse;
   if ( trackMouse ) {
     _game._canvas.style.cursor = 'none';
