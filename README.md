@@ -84,6 +84,12 @@ When you're finished programming the feature and you've committed all of your ch
 
 Assuming there are no major conflicts, your feature should now be in the `develop` branch.
 
+Merging new changes into your personal branch
+---------------------------------------------
+
+If there's a branch with some changes that you want in your personal branch, you'll want to merge the changed branch into your personal branch.
+
+
 
 Command-line instructions
 -------------------------
