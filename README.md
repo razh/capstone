@@ -37,6 +37,8 @@ In addition, there are three categories of supporting branches we can create:
 
 Since we're not working in a production environment where we have to ship code, we're only going to be using feature branches.
 
+When working with multiple people, there are two models of collaboraitve development.
+
 
 GitHub for Mac instructions
 ---------------------------
@@ -88,7 +90,6 @@ Merging new changes into your personal branch
 ---------------------------------------------
 
 If there's a branch with some changes that you want in your personal branch, you'll want to merge the changed branch into your personal branch.
-
 
 
 Command-line instructions
