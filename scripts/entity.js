@@ -34,6 +34,13 @@ Entity.prototype.setY = function( y ) {
   this.position.y = y;
 };
 
+Entity.prototype.getXY = function() {
+  return {
+    x: this.position.x,
+    y: this.position.y
+  }
+};
+
 Entity.prototype.setXY = function( x, y ) {
   this.position.x = x;
   this.position.y = y;
@@ -46,16 +53,19 @@ Entity.prototype.setVelocity = function( vx, vy ) {
 
 
 // Shape -----------------------------------------------------------------------
-var Shape = function( x, y, color ) {
+var Shape = function( x, y, red, green, blue, alpha ) {
   Entity.call( this, x, y );
 
-  this.color = color;
+  this.red = red;
+  this.green = green;
+  this.blue = blue;
+  this.alpha = alpha;
 };
 
 
 // Circle ----------------------------------------------------------------------
-var Circle = function( x, y, color, radius ) {
-  Shape.call( this, x, y, color );
+var Circle = function( x, y, red, green, blue, alpha, radius ) {
+  Shape.call( this, x, y, red, green, blue, alpha );
   this.radius = radius;
 
   this.lifeTime = 0;
@@ -96,10 +106,10 @@ Circle.prototype.draw = function( ctx ) {
     Math.PI * 2,
     true
   );
-  ctx.fillStyle = 'rgba( ' + Math.round( this.color.red )   +
-                  ', '     + Math.round( this.color.green ) +
-                  ','      + Math.round( this.color.blue )  +
-                  ','      + this.color.alpha + ' )';
+  ctx.fillStyle = 'rgba( ' + Math.round( this.red )   +
+                  ', '     + Math.round( this.green ) +
+                  ','      + Math.round( this.blue )  +
+                  ','      + this.alpha + ' )';
   ctx.fill();
 };
 
@@ -125,8 +135,8 @@ Circle.prototype.getIntersection = function( target ) {
 
 
 // Character -------------------------------------------------------------------
-var Character = function( x, y, color, radius ) {
-  Circle.call( this, x, y, color, radius );
+var Character = function( x, y, red, green, blue, alpha, radius ) {
+  Circle.call( this, x, y, red, green, blue, alpha, radius );
 
   this.weapons = [];
 
@@ -189,9 +199,10 @@ Character.prototype.hit = function() {
         this,
         {
           radius: 15,
-          color: {
-            red: 200
-          }
+          red: 200
+          // color: {
+          //   red: 200
+          // }
         },
         50,
         Easing.easeInOutCubic,
@@ -202,9 +213,10 @@ Character.prototype.hit = function() {
               this,
               {
                 radius: -15,
-                color: {
-                  red: -200
-                }
+                red: -200
+                // color: {
+                //   red: -200
+                // }
               },
               150,
               Easing.linear,
