@@ -36,7 +36,9 @@ Weapon.prototype.setEntityAsTarget = function( entity ) {
 };
 
 Weapon.prototype.hasTarget = function() {
-  return !Number.isNaN( this.target.x ) && !Number.isNaN( this.target.y );
+  /* Cannot use isNaN() or Number.isNaN() as they are not implemented in Chrome
+     for Android. */
+  return this.target.x !== Number.NaN && this.target.y !== Number.NaN;
 };
 
 Weapon.prototype.targetInRange = function() {
@@ -46,10 +48,10 @@ Weapon.prototype.targetInRange = function() {
   if ( this.range === -1 )
     return true;
 
-  return this.range >= Math.sqrt( ( this.target.x - this.entity.x ) *
-                                  ( this.target.x - this.entity.x ) +
-                                  ( this.target.y - this.entity.y ) *
-                                  ( this.target.y - this.entity.y ) );
+  return this.range >= Math.sqrt( ( this.target.x - this.entity.getX() ) *
+                                  ( this.target.x - this.entity.getX() ) +
+                                  ( this.target.y - this.entity.getY() ) *
+                                  ( this.target.y - this.entity.getY() ) );
 };
 
 // Gun -------------------------------------------------------------------------
@@ -86,15 +88,15 @@ BulletGun.prototype.constructor = BulletGun;
 
 BulletGun.prototype.fire = function() {
   var bullet = new Bullet(
-    this.entity.x,
-    this.entity.y,
+    this.entity.getX(),
+    this.entity.getY(),
     0, 0, 0, 1.0,
     2,
     this.entity.team
   );
 
-  bullet.velocity.x = this.target.x - this.entity.x;
-  bullet.velocity.y = this.target.y - this.entity.y;
+  bullet.velocity.x = this.target.x - this.entity.getX();
+  bullet.velocity.y = this.target.y - this.entity.getY();
 
   var magnitude = Math.sqrt( bullet.velocity.x *
                              bullet.velocity.x +
@@ -130,10 +132,10 @@ Bullet.prototype.update = function( elapsedTime ) {
     var characters = _game.getCharacters();
     for ( i = characters.length - 1; i >= 0; i-- ) {
       if ( characters[i].getTeam() !== this.team ) {
-        distance = Math.sqrt( ( this.x - characters[i].getX() ) *
-                              ( this.x - characters[i].getX() ) +
-                              ( this.y - characters[i].getY() ) *
-                              ( this.y - characters[i].getY() ) );
+        distance = Math.sqrt( ( this.getX() - characters[i].getX() ) *
+                              ( this.getX() - characters[i].getX() ) +
+                              ( this.getY() - characters[i].getY() ) *
+                              ( this.getY() - characters[i].getY() ) );
         if ( distance < this.radius + characters[i].radius ) {
           characters[i].hit();
           removeBullet = true;
@@ -156,7 +158,7 @@ Bullet.prototype.update = function( elapsedTime ) {
         this,
         {
           radius: 5,
-          alpha: -1.0
+          alpha: -1.0,
         },
         500,
         Easing.easeOutQuad,
@@ -176,6 +178,7 @@ Bullet.prototype.update = function( elapsedTime ) {
 var LaserGun = function( entity, damage, rate, range,
                          red, green, blue, alpha ) {
   Gun.call( this, entity, damage, rate, range );
+
 
   this.red   = red;
   this.green = green;
@@ -209,7 +212,7 @@ LaserGun.prototype.update = function( elapsedTime ) {
 };
 
 LaserGun.prototype.fire = function() {
-  var point = this.targetEntity.getIntersection( this.entity );
+  var point = this.targetEntity.getIntersection( this.entity.getXY() );
   this.beam.x = point.x;
   this.beam.y = point.y;
 
@@ -232,13 +235,13 @@ LaserGun.prototype.setEntityAsTarget = function( entity ) {
 var LaserBeam = function( entity, x, y, red, green, blue, alpha ) {
   this.entity = entity;
 
-  this.x      = x;
-  this.y      = y;
+  this.x = x;
+  this.y = y;
 
-  this.red    = red;
-  this.green  = green;
-  this.blue   = blue;
-  this.alpha  = alpha;
+  this.red   = red;
+  this.green = green;
+  this.blue  = blue;
+  this.alpha = alpha;
 };
 
 LaserBeam.prototype.draw = function( ctx ) {
