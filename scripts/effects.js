@@ -7,8 +7,10 @@ var Effect = function( object, properties, duration, easing, step, complete ) {
   this.complete   = complete;
 
   this.begin = {};
-  for ( var key in this.properties )
+  for ( var key in this.properties ) {
     this.begin[ key ] = this.object[ key ];
+  }
+
 
   this.time = 0;
 };
@@ -17,10 +19,21 @@ Effect.prototype.update = function( elapsedTime ) {
   this.time += elapsedTime;
 
   var key;
+  var subkey;
   // When the effect is complete, call the complete function.
   if ( this.time >= this.duration ) {
-    for ( key in this.properties )
-      this.object[ key ] = this.begin[ key ] + this.properties[ key ];
+    for ( key in this.properties ) {
+      // If it's an object that means it has sub-properties.
+      // We will handle at most one level of indirection.
+      if ( typeof( this.properties[ key ] ) === "object" ) {
+        for ( subkey in this.properties[ key ] ) {
+          this.object[ key ][ subkey ] = this.begin[ key ][ subkey ] +
+                                         this.properties[ key ][ subkey ];
+        }
+      } else {
+        this.object[ key ] = this.begin[ key ] + this.properties[ key ];
+      }
+    }
 
     _game.removeEffect( this );
     if ( this.complete !== null && this.complete !== undefined ) {
@@ -31,13 +44,25 @@ Effect.prototype.update = function( elapsedTime ) {
     }
   } else {
     for ( key in this.properties ) {
-      this.object[ key ] = this.easing.call(
-        this,
-        this.time,
-        this.begin[ key ],
-        this.properties[ key ],
-        this.duration
-      );
+      if ( typeof( this.properties[ key ] ) === "object" ) {
+        for ( subkey in this.properties[ key ] ) {
+          this.object[ key ][ subkey ] = this.easing.call(
+            this,
+            this.time,
+            this.begin[ key ][ subkey ],
+            this.properties[ key ][ subkey ],
+            this.duration
+          );
+        }
+      } else {
+        this.object[ key ] = this.easing.call(
+          this,
+          this.time,
+          this.begin[ key ],
+          this.properties[ key ],
+          this.duration
+        );
+      }
     }
   }
 

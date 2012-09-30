@@ -37,7 +37,12 @@ In addition, there are three categories of supporting branches we can create:
 
 Since we're not working in a production environment where we have to ship code, we're only going to be using feature branches.
 
-When working with multiple people, there are two models of collaboraitve development.
+When working with multiple people, there are two models of collaborative development:
+
+- Shared repository model
+- Fork-and-pull
+
+Because of how small the team is, following the shared repository would allow us to develop faster.
 
 
 GitHub for Mac instructions
@@ -94,6 +99,10 @@ If there's a branch with some changes that you want in your personal branch, you
 
 Command-line instructions
 -------------------------
+
+Getting the repository from GitHub.
+
+    git clone
 
 Branching off from the develop branch to work on something called featureName.
 

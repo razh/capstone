@@ -48,10 +48,10 @@ Weapon.prototype.targetInRange = function() {
   if ( this.range === -1 )
     return true;
 
-  return this.range >= Math.sqrt( ( this.target.x - this.entity.x ) *
-                                  ( this.target.x - this.entity.x ) +
-                                  ( this.target.y - this.entity.y ) *
-                                  ( this.target.y - this.entity.y ) );
+  return this.range >= Math.sqrt( ( this.target.x - this.entity.getX() ) *
+                                  ( this.target.x - this.entity.getX() ) +
+                                  ( this.target.y - this.entity.getY() ) *
+                                  ( this.target.y - this.entity.getY() ) );
 };
 
 // Gun -------------------------------------------------------------------------
@@ -88,15 +88,15 @@ BulletGun.prototype.constructor = BulletGun;
 
 BulletGun.prototype.fire = function() {
   var bullet = new Bullet(
-    this.entity.x,
-    this.entity.y,
-    0, 0, 0, 1.0,
+    this.entity.getX(),
+    this.entity.getY(),
+    { red: 0, green: 0, blue: 0, alpha: 1.0 },
     2,
     this.entity.team
   );
 
-  bullet.velocity.x = this.target.x - this.entity.x;
-  bullet.velocity.y = this.target.y - this.entity.y;
+  bullet.velocity.x = this.target.x - this.entity.getX();
+  bullet.velocity.y = this.target.y - this.entity.getY();
 
   var magnitude = Math.sqrt( bullet.velocity.x *
                              bullet.velocity.x +
@@ -112,8 +112,8 @@ BulletGun.prototype.fire = function() {
 
 
 // Bullet ----------------------------------------------------------------------
-var Bullet = function( x, y, red, green, blue, alpha, radius, team ) {
-  Circle.call( this, x, y, red, green, blue, alpha, radius );
+var Bullet = function( x, y, color, radius, team ) {
+  Circle.call( this, x, y, color, radius );
 
   this.collides = true;
   this.team     = team;
@@ -132,10 +132,10 @@ Bullet.prototype.update = function( elapsedTime ) {
     var characters = _game.getCharacters();
     for ( i = characters.length - 1; i >= 0; i-- ) {
       if ( characters[i].getTeam() !== this.team ) {
-        distance = Math.sqrt( ( this.x - characters[i].getX() ) *
-                              ( this.x - characters[i].getX() ) +
-                              ( this.y - characters[i].getY() ) *
-                              ( this.y - characters[i].getY() ) );
+        distance = Math.sqrt( ( this.getX() - characters[i].getX() ) *
+                              ( this.getX() - characters[i].getX() ) +
+                              ( this.getY() - characters[i].getY() ) *
+                              ( this.getY() - characters[i].getY() ) );
         if ( distance < this.radius + characters[i].radius ) {
           characters[i].hit();
           removeBullet = true;
@@ -158,7 +158,9 @@ Bullet.prototype.update = function( elapsedTime ) {
         this,
         {
           radius: 5,
-          alpha: -1.0
+          color: {
+            alpha: -1.0
+          }
         },
         500,
         Easing.easeOutQuad,
@@ -176,13 +178,10 @@ Bullet.prototype.update = function( elapsedTime ) {
 
 // LaserGun --------------------------------------------------------------------
 var LaserGun = function( entity, damage, rate, range,
-                         red, green, blue, alpha ) {
+                         color ) {
   Gun.call( this, entity, damage, rate, range );
 
-  this.red   = red;
-  this.green = green;
-  this.blue  = blue;
-  this.alpha = alpha;
+  this.color = color;
 
   this.targetEntity = null;
 
@@ -191,10 +190,7 @@ var LaserGun = function( entity, damage, rate, range,
     this.entity,
     this.target.x,
     this.target.y,
-    this.red,
-    this.green,
-    this.blue,
-    this.alpha
+    this.color
   );
 };
 
@@ -231,23 +227,20 @@ LaserGun.prototype.setEntityAsTarget = function( entity ) {
 
 
 // LaserBeam -------------------------------------------------------------------
-var LaserBeam = function( entity, x, y, red, green, blue, alpha ) {
+var LaserBeam = function( entity, x, y, color ) {
   this.entity = entity;
 
-  this.x      = x;
-  this.y      = y;
+  this.x = x;
+  this.y = y;
 
-  this.red    = red;
-  this.green  = green;
-  this.blue   = blue;
-  this.alpha  = alpha;
+  this.color = color;
 };
 
 LaserBeam.prototype.draw = function( ctx ) {
-  ctx.strokeStyle = 'rgba( ' + Math.round( this.red )   +
-                    ', '     + Math.round( this.green ) +
-                    ','      + Math.round( this.blue )  +
-                    ','      + this.alpha + ' )';
+  ctx.strokeStyle = 'rgba( ' + Math.round( this.color.red )   +
+                    ', '     + Math.round( this.color.green ) +
+                    ','      + Math.round( this.color.blue )  +
+                    ','      + this.color.alpha + ' )';
   ctx.lineWidth = 3;
 
   var point = this.entity.getIntersection({
