@@ -54,6 +54,7 @@ Weapon.prototype.targetInRange = function() {
                                   ( this.target.y - this.entity.getY() ) );
 };
 
+
 // Gun -------------------------------------------------------------------------
 var Gun = function( entity, damage, rate, range ) {
   Weapon.call( this, entity, damage, rate, range );
@@ -174,11 +175,11 @@ Bullet.prototype.update = function( elapsedTime ) {
   }
 };
 
+
 // LaserGun --------------------------------------------------------------------
 var LaserGun = function( entity, damage, rate, range,
                          red, green, blue, alpha ) {
   Gun.call( this, entity, damage, rate, range );
-
 
   this.red   = red;
   this.green = green;
@@ -265,3 +266,15 @@ LaserBeam.prototype.draw = function( ctx ) {
 };
 
 LaserBeam.prototype.update = function( elapsedTime ) {};
+
+
+// MissileGun ------------------------------------------------------------------
+var MissileGun = function() {
+
+};
+
+
+// Missile ---------------------------------------------------------------------
+var Missile = function() {
+
+};
