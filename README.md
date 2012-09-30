@@ -106,21 +106,22 @@ Getting the repository from GitHub. Use this command in your desired working dir
 
 To actually start working on something, we need to create our own personal branch.
 
-Branching off from the develop branch to work on something called featureName.
+Branching off from the develop branch to work on something called *featureName*.
 
     git checkout -b featureName develop
 
-When we want to save stuff.
+Committing our changes.
 
     git commit -m 'Commit comment.'
 
-When we want to send all our commits to the GitHub server.
+Sending all our commits to the GitHub server.
 
     git push origin featureName
 
-When you want to get the latest updates.
+Getting the latest updates.
 
-    git pull
+    git fetch origin featureName
+    git merge featureName
 
 Merging from the featureName branch back into develop.
 
