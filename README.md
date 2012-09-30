@@ -114,7 +114,7 @@ Committing our changes.
 
     git commit -m 'Commit comment.'
 
-Sending all our commits to the GitHub server.
+Sending all of our commits to the GitHub server.
 
     git push origin featureName
 
