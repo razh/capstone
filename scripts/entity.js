@@ -1,7 +1,9 @@
 // Entity ----------------------------------------------------------------------
 var Entity = function( x, y ) {
-  this.x = x;
-  this.y = y;
+  this.position = {
+    x: x,
+    y: y
+  };
 
   this.lifeTime = 0;
 
@@ -12,21 +14,36 @@ var Entity = function( x, y ) {
 };
 
 Entity.prototype.update = function( elapsedTime ) {
-  this.x += elapsedTime * this.velocity.x;
-  this.y += elapsedTime * this.velocity.y;
+  this.position.x += elapsedTime * this.velocity.x;
+  this.position.y += elapsedTime * this.velocity.y;
 };
 
 Entity.prototype.getX = function() {
-  return this.x;
+  return this.position.x;
+};
+
+Entity.prototype.setX = function( x ) {
+  this.position.x = x;
 };
 
 Entity.prototype.getY = function() {
-  return this.y;
+  return this.position.y;
+};
+
+Entity.prototype.setY = function( y ) {
+  this.position.y = y;
+};
+
+Entity.prototype.getXY = function() {
+  return {
+    x: this.position.x,
+    y: this.position.y
+  }
 };
 
 Entity.prototype.setXY = function( x, y ) {
-  this.x = x;
-  this.y = y;
+  this.position.x = x;
+  this.position.y = y;
 };
 
 Entity.prototype.setVelocity = function( vx, vy ) {
@@ -39,9 +56,9 @@ Entity.prototype.setVelocity = function( vx, vy ) {
 var Shape = function( x, y, red, green, blue, alpha ) {
   Entity.call( this, x, y );
 
-  this.red   = red;
+  this.red = red;
   this.green = green;
-  this.blue  = blue;
+  this.blue = blue;
   this.alpha = alpha;
 };
 
@@ -61,20 +78,20 @@ Circle.prototype.constructor = Circle;
 Circle.prototype.update = function( elapsedTime ) {
   Entity.prototype.update.call( this, elapsedTime );
 
-  if ( this.radius > this.x ) {
-    this.x = this.radius;
+  if ( this.radius > this.getX() ) {
+    this.setX( this.radius );
     this.velocity.x = -this.velocity.x;
   }
-  if ( this.x + this.radius > _game.WIDTH ) {
-    this.x = _game.WIDTH - this.radius;
+  if ( this.getX() + this.radius > _game.WIDTH ) {
+    this.setX( _game.WIDTH - this.radius );
     this.velocity.x = -this.velocity.x;
   }
-  if ( this.radius > this.y ) {
-    this.y = this.radius;
+  if ( this.radius > this.getY() ) {
+    this.setY( this.radius );
     this.velocity.y = -this.velocity.y;
   }
-  if ( this.y + this.radius > _game.HEIGHT ) {
-    this.y = _game.HEIGHT - this.radius;
+  if ( this.getY() + this.radius > _game.HEIGHT ) {
+    this.setY( _game.HEIGHT - this.radius );
     this.velocity.y = -this.velocity.y;
   }
 };
@@ -82,13 +99,14 @@ Circle.prototype.update = function( elapsedTime ) {
 Circle.prototype.draw = function( ctx ) {
   ctx.beginPath();
   ctx.arc(
-    Math.round( this.x ),
-    Math.round( this.y ),
+    Math.round( this.getX() ),
+    Math.round( this.getY() ),
     Math.round( this.radius ),
     0,
     Math.PI * 2,
     true
   );
+
   ctx.fillStyle = 'rgba( ' + Math.round( this.red )   +
                   ', '     + Math.round( this.green ) +
                   ','      + Math.round( this.blue )  +
@@ -97,8 +115,8 @@ Circle.prototype.draw = function( ctx ) {
 };
 
 Circle.prototype.getIntersection = function( target ) {
-  var x0 = this.x,
-      y0 = this.y,
+  var x0 = this.getX(),
+      y0 = this.getY(),
       r0 = this.radius,
       x1 = target.x,
       y1 = target.y;
@@ -167,10 +185,10 @@ Character.prototype.getNearestEntity = function( entities ) {
 };
 
 Character.prototype.distanceToEntity = function( entity ) {
-  return Math.sqrt( ( this.x - entity.getX() ) *
-                    ( this.x - entity.getX() ) +
-                    ( this.y - entity.getY() ) *
-                    ( this.y - entity.getY() ) );
+  return Math.sqrt( ( this.getX() - entity.getX() ) *
+                    ( this.getX() - entity.getX() ) +
+                    ( this.getY() - entity.getY() ) *
+                    ( this.getY() - entity.getY() ) );
 };
 
 Character.prototype.hit = function() {
