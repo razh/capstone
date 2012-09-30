@@ -17,6 +17,7 @@ Effect.prototype.update = function( elapsedTime ) {
   this.time += elapsedTime;
 
   var key;
+  var subkey;
   // When the effect is complete, call the complete function.
   if ( this.time >= this.duration ) {
     for ( key in this.properties )
