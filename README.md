@@ -100,13 +100,28 @@ If there's a branch with some changes that you want in your personal branch, you
 Command-line instructions
 -------------------------
 
-Getting the repository from GitHub.
+Getting the repository from GitHub. Use this command in your desired working directory.
 
-    git clone
+    git clone https://github.com/razh/capstone.git
 
-Branching off from the develop branch to work on something called featureName.
+To actually start working on something, we need to create our own personal branch.
+
+Branching off from the develop branch to work on something called *featureName*.
 
     git checkout -b featureName develop
+
+Committing our changes.
+
+    git commit -m 'Commit comment.'
+
+Sending all of our commits to the GitHub server.
+
+    git push origin featureName
+
+Getting the latest updates.
+
+    git fetch origin featureName
+    git merge featureName
 
 Merging from the featureName branch back into develop.
 
