@@ -62,7 +62,7 @@ Effect.prototype.update = function( elapsedTime ) {
           this.properties[ key ],
           this.duration
         );
-      // }
+      }
     }
   }
 
