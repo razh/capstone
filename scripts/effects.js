@@ -25,14 +25,14 @@ Effect.prototype.update = function( elapsedTime ) {
     for ( key in this.properties ) {
       // If it's an object that means it has sub-properties.
       // We will handle at most one level of indirection.
-      // if ( typeof( this.properties[ key ] ) === "object" ) {
-      //   for ( subkey in this.properties[ key ] ) {
-      //     this.object[ key ][ subkey ] = this.begin[ key ][ subkey ] +
-      //                                    this.properties[ key ][ subkey ];
-      //   }
-      // } else {
+      if ( typeof( this.properties[ key ] ) === "object" ) {
+        for ( subkey in this.properties[ key ] ) {
+          this.object[ key ][ subkey ] = this.begin[ key ][ subkey ] +
+                                         this.properties[ key ][ subkey ];
+        }
+      } else {
         this.object[ key ] = this.begin[ key ] + this.properties[ key ];
-      // }
+      }
     }
 
     _game.removeEffect( this );
@@ -44,17 +44,17 @@ Effect.prototype.update = function( elapsedTime ) {
     }
   } else {
     for ( key in this.properties ) {
-      // if ( typeof( this.properties[ key ] ) === "object" ) {
-      //   for ( subkey in this.properties[ key ] ) {
-      //     this.object[ key ][ subkey ] = this.easing.call(
-      //       this,
-      //       this.time,
-      //       this.begin[ key ][ subkey ],
-      //       this.properties[ key ][ subkey ],
-      //       this.duration
-      //     );
-      //   }
-      // } else {
+      if ( typeof( this.properties[ key ] ) === "object" ) {
+        for ( subkey in this.properties[ key ] ) {
+          this.object[ key ][ subkey ] = this.easing.call(
+            this,
+            this.time,
+            this.begin[ key ][ subkey ],
+            this.properties[ key ][ subkey ],
+            this.duration
+          );
+        }
+      } else {
         this.object[ key ] = this.easing.call(
           this,
           this.time,
