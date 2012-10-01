@@ -92,7 +92,7 @@ BulletGun.prototype.fire = function() {
     this.entity.getX(),
     this.entity.getY(),
     0, 0, 0, 1.0,
-    2,
+    3,
     this.entity.team
   );
 
