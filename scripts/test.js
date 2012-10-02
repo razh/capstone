@@ -5,7 +5,6 @@ function onMouseMove( event ) {
     x: event.pageX - _game._canvas.offsetLeft,
     y: event.pageY - _game._canvas.offsetTop
   };
-  // event.pageY -= _game._canvas.offsetTop;
 
   if ( trackMouse ) {
     _game._characters[0].setXY( mouse.x, mouse.y )
