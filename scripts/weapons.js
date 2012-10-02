@@ -78,10 +78,18 @@ Gun.prototype.fire = function() {};
 
 // BulletGun -------------------------------------------------------------------
 
-var BulletGun = function( entity, damage, rate, range, speed ) {
+var BulletGun = function( entity, damage, rate, range, speed,
+                          red, green, blue, alpha, radius ) {
   Gun.call( this, entity, damage, rate, range );
 
-  this.speed  = speed;
+  this.speed = speed;
+
+  this.red   = red;
+  this.green = green;
+  this.blue  = blue;
+  this.alpha = alpha;
+
+  this.radius = radius;
 };
 
 BulletGun.prototype = new Gun();
@@ -91,8 +99,11 @@ BulletGun.prototype.fire = function() {
   var bullet = new Bullet(
     this.entity.getX(),
     this.entity.getY(),
-    0, 0, 0, 1.0,
-    3,
+    this.red,
+    this.green,
+    this.blue,
+    this.alpha,
+    this.radius,
     this.entity.team
   );
 

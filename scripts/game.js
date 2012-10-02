@@ -110,13 +110,13 @@ Game.prototype.init = function() {
 
   var char1 = new Character( 200, 200, 240, 63, 53, 1.0, 20 );
   char1.setTeam( 1 );
-  char1.addWeapon( new BulletGun( char1, 1, 200, -1, 0.5 ) );
+  char1.addWeapon( new BulletGun( char1, 1, 200, -1, 0.5, 27, 32, 37, 1.0, 3 ) );
   char1.addWeapon( new LaserGun( char1, 1, 200, 200, 240, 103, 93, 0.75 ) );
   this.addCharacter( char1 );
 
   var char2 = new Character( 400, 500, 240, 240, 211, 1.0, 20 );
   char2.setVelocity( 0, 0 );
-  char2.addWeapon( new BulletGun( char2, 1, 1000, -1, 0.5 ) );
+  char2.addWeapon( new BulletGun( char2, 1, 1000, -1, 0.5, 27, 32, 37, 1.0, 3 ) );
   this.addCharacter( char2 );
 };
 
