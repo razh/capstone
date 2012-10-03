@@ -257,9 +257,9 @@ var LaserBeam = function( entity, x, y, red, green, blue, alpha ) {
 };
 
 LaserBeam.prototype.draw = function( ctx ) {
-  ctx.strokeStyle = 'rgba( ' + Math.round( this.red )   +
-                    ', '     + Math.round( this.green ) +
-                    ','      + Math.round( this.blue )  +
+  ctx.strokeStyle = 'rgba( ' + ( ( 0.5 + this.red )   << 0 ) +
+                    ', '     + ( ( 0.5 + this.green ) << 0 ) +
+                    ','      + ( ( 0.5 + this.blue )  << 0 ) +
                     ','      + this.alpha + ' )';
   ctx.lineWidth = 3;
 

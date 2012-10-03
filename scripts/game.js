@@ -19,6 +19,12 @@ var Game = function() {
   this._characters  = [];
   this._projectiles = [];
   this._effects     = [];
+
+  // Pre-rendering code initialization.
+  this._tmpCanvas = document.createElement( 'canvas' );
+  this._tmpCanvas.width  = this.WIDTH;
+  this._tmpCanvas.height = this.HEIGHT;
+  this._tmpCtx = this._tmpCanvas.getContext( '2d' );
 };
 
 // Add entities.
@@ -85,20 +91,23 @@ Game.prototype.tick = function() {
 
 // Drawing functions.
 Game.prototype.draw = function() {
+  this._tmpCtx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
+
+  this.drawCharacters( this._tmpCtx );
+  this.drawProjectiles( this._tmpCtx );
+
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
-
-  this.drawCharacters();
-  this.drawProjectiles();
+  this._ctx.drawImage( this._tmpCanvas, 0, 0 );
 };
 
-Game.prototype.drawCharacters = function() {
+Game.prototype.drawCharacters = function( ctx ) {
   for ( var i = this._characters.length - 1; i >= 0; i-- )
-    this._characters[i].draw( this._ctx );
+    this._characters[i].draw( ctx );
 };
 
-Game.prototype.drawProjectiles = function() {
+Game.prototype.drawProjectiles = function( ctx ) {
   for ( var i = this._projectiles.length - 1; i >= 0; i-- )
-    this._projectiles[i].draw( this._ctx );
+    this._projectiles[i].draw( ctx );
 };
 
 // Initialize game object.
