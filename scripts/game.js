@@ -9,7 +9,6 @@ var Game = function() {
   this.WIDTH  = window.innerWidth;
   this.HEIGHT = window.innerHeight;
 
-  // this._canvas.style.padding = '0px 0px';
   this._canvas.style.backgroundColor = '#92AF9F';
   this._canvas.width  = this.WIDTH;
   this._canvas.height = this.HEIGHT;
