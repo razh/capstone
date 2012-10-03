@@ -97,6 +97,10 @@ Circle.prototype.update = function( elapsedTime ) {
 };
 
 Circle.prototype.draw = function( ctx ) {
+  // Avoid a negative radius which ctx.arc() can't handle.
+  if( this.radius < 0 )
+    return;
+
   ctx.beginPath();
   ctx.arc(
     Math.round( this.getX() ),
