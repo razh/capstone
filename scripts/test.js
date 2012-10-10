@@ -60,7 +60,6 @@ function direction( x0, y0, x1, y1 ) {
   return Math.atan2( y1 - y0, x1 - x0 );
 }
 
-
 function loop() {
   if ( !running )
     return;
