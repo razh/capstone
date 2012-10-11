@@ -9,7 +9,6 @@ var Game = function() {
   this.WIDTH  = window.innerWidth;
   this.HEIGHT = window.innerHeight;
 
-  // this._canvas.style.padding = '0px 0px';
   this._canvas.style.backgroundColor = '#92AF9F';
   this._canvas.width  = this.WIDTH;
   this._canvas.height = this.HEIGHT;
@@ -88,18 +87,18 @@ Game.prototype.tick = function() {
 Game.prototype.draw = function() {
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
-  this.drawCharacters();
-  this.drawProjectiles();
+  this.drawCharacters( this._ctx );
+  this.drawProjectiles( this._ctx );
 };
 
-Game.prototype.drawCharacters = function() {
+Game.prototype.drawCharacters = function( ctx ) {
   for ( var i = this._characters.length - 1; i >= 0; i-- )
-    this._characters[i].draw( this._ctx );
+    this._characters[i].draw( ctx );
 };
 
-Game.prototype.drawProjectiles = function() {
+Game.prototype.drawProjectiles = function( ctx ) {
   for ( var i = this._projectiles.length - 1; i >= 0; i-- )
-    this._projectiles[i].draw( this._ctx );
+    this._projectiles[i].draw( ctx );
 };
 
 // Initialize game object.

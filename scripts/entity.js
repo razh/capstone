@@ -97,19 +97,25 @@ Circle.prototype.update = function( elapsedTime ) {
 };
 
 Circle.prototype.draw = function( ctx ) {
+  // Avoid a negative radius which ctx.arc() can't handle.
+  if( this.radius < 0 )
+    return;
+
+  // Idiom for rounding floats.
+  // rounded = ( 0.5 + someNum ) << 0
   ctx.beginPath();
   ctx.arc(
-    Math.round( this.getX() ),
-    Math.round( this.getY() ),
-    Math.round( this.radius ),
+    ( 0.5 + this.getX() ) << 0,
+    ( 0.5 + this.getY() ) << 0,
+    ( 0.5 + this.radius ) << 0,
     0,
     Math.PI * 2,
     true
   );
 
-  ctx.fillStyle = 'rgba( ' + Math.round( this.red )   +
-                  ', '     + Math.round( this.green ) +
-                  ','      + Math.round( this.blue )  +
+  ctx.fillStyle = 'rgba( ' + ( ( 0.5 + this.red )   << 0 ) +
+                  ', '     + ( ( 0.5 + this.green ) << 0 ) +
+                  ','      + ( ( 0.5 + this.blue )  << 0 ) +
                   ','      + this.alpha + ' )';
   ctx.fill();
 };
