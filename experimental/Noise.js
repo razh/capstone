@@ -1,16 +1,11 @@
-var Noise = function() {
+var Noise = (function() {
   var test = 6;
   return {
-    this.noise = function( string ) {
-  console.log("5" + string);
+    noise: function( string ) {
+      console.log("5" + string + test);
 
     }
   };
-};
-
-// Noise.noise = function( string ) {
-//   console.log("5" + string);
-// };
-
+}) ();
 
 Noise.noise("sdsd");
