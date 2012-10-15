@@ -92,6 +92,7 @@ BulletGun.prototype.fire = function() {
     this.entity.y,
     0, 0, 0, 1.0,
     2,
+    this.entity.range,
     this.entity.team
   );
 
@@ -112,8 +113,11 @@ BulletGun.prototype.fire = function() {
 
 
 // Bullet ----------------------------------------------------------------------
-var Bullet = function( x, y, red, green, blue, alpha, radius, team ) {
+var Bullet = function( x, y, red, green, blue, alpha, radius, range, team ) {
   Circle.call( this, x, y, red, green, blue, alpha, radius );
+
+  var originalx = this.x;
+  var originaly = this.y;
 
   this.collides = true;
   this.team     = team;
@@ -125,9 +129,10 @@ Bullet.prototype.constructor = Bullet;
 Bullet.prototype.update = function( elapsedTime ) {
   Circle.prototype.update.call( this, elapsedTime );
 
+  var distance;
   var removeBullet = false;
   if ( this.collides ) {
-    var distance;
+    
     var i;
     var characters = _game.getCharacters();
     for ( i = characters.length - 1; i >= 0; i-- ) {
@@ -144,11 +149,23 @@ Bullet.prototype.update = function( elapsedTime ) {
     }
   }
 
+  distance = Math.sqrt( ( this.x - this.originalx ) *
+                        ( this.x - this.originalx ) +
+                        ( this.y - this.originaly ) *
+                        ( this.y - this.originaly ) );
+
+  if ( distance >= this.range)
+  {
+    removeBullet = true;
+  }
+
   if ( this.lifeTime > this.maximumAge ) {
     removeBullet = true;
   } else {
     this.lifeTime += elapsedTime;
   }
+  
+  
 
   if ( removeBullet ) {
     this.setVelocity( 0, 0 );

@@ -104,19 +104,23 @@ Game.prototype.drawProjectiles = function() {
 
 // Initialize game object.
 Game.prototype.init = function() {
+  // blue
   var char0 = new Character( 400, 400, 0, 0, 200, 1.0, 10 );
   char0.setVelocity( 0, 0 );
+  //char0.addWeapon( new LaserGun( char0, 1, 200, 200, 255, 200, 200, 1.0 ) );
   this.addCharacter( char0 );
 
+  // red
   var char1 = new Character( 200, 200, 200, 0, 0, 1.0, 10 );
   char1.setTeam( 1 );
-  char1.addWeapon( new BulletGun( char1, 1, 200, -1, 0.5 ) );
+  //char1.addWeapon( new BulletGun( char1, 1, 200, -1, 0.5 ) );
   char1.addWeapon( new LaserGun( char1, 1, 200, 200, 255, 200, 200, 1.0 ) );
   this.addCharacter( char1 );
 
+  // green
   var char2 = new Character( 400, 500, 0, 200, 0, 1.0, 10 );
   char2.setVelocity( 0, 0 );
-  char2.addWeapon( new BulletGun( char2, 1, 1000, -1, 0.5 ) );
+  char2.addWeapon( new BulletGun( char2, 1, 300, -1, 0.5 ) );
   this.addCharacter( char2 );
 
 };

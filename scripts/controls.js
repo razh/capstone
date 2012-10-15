@@ -21,7 +21,7 @@ function onMouseDown( event ) {
   trackMouse = !trackMouse;
   if ( trackMouse ) {
     _game._canvas.style.cursor = 'none';
-    _game._characters[0].setXY( mouse.x, mouse.y )
+    //_game._characters[0].setXY( mouse.x, mouse.y )
   } else {
     _game._canvas.style.cursor = 'default';
   }
