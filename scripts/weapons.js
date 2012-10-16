@@ -116,8 +116,8 @@ BulletGun.prototype.fire = function() {
 var Bullet = function( x, y, red, green, blue, alpha, radius, range, team ) {
   Circle.call( this, x, y, red, green, blue, alpha, radius );
 
-  var originalx = this.x;
-  var originaly = this.y;
+  var originalx = x;
+  var originaly = y;
 
   this.collides = true;
   this.team     = team;
@@ -149,12 +149,14 @@ Bullet.prototype.update = function( elapsedTime ) {
     }
   }
 
+  // Calculate bullets distance from origin
   distance = Math.sqrt( ( this.x - this.originalx ) *
                         ( this.x - this.originalx ) +
                         ( this.y - this.originaly ) *
                         ( this.y - this.originaly ) );
 
-  if ( distance >= this.range)
+  // Check if bullet is at the end of weapon range
+  if ( distance >= this.range )
   {
     removeBullet = true;
   }
@@ -164,8 +166,6 @@ Bullet.prototype.update = function( elapsedTime ) {
   } else {
     this.lifeTime += elapsedTime;
   }
-  
-  
 
   if ( removeBullet ) {
     this.setVelocity( 0, 0 );

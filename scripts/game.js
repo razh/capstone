@@ -1,3 +1,4 @@
+// Main Game Function ----------------------------------------------------------
 var Game = function() {
   if ( arguments.callee._gameInstance )
     return arguments.callee._gameInstance;
@@ -18,42 +19,48 @@ var Game = function() {
   this._currTime = this._prevTime;
 
   this._characters  = [];
+  this._enemies     = [];
   this._projectiles = [];
   this._effects     = [];
 };
 
-// Add entities.
+// Character Array Functions ---------------------------------------------------
 Game.prototype.addCharacter = function( character ) {
   this._characters.push( character );
 };
 
-Game.prototype.addProjectile = function( projectile ) {
-  this._projectiles.push( projectile );
-};
-
-Game.prototype.addEffect = function( effect ) {
-  this._effects.push( effect );
-};
-
-// Remove entities.
 Game.prototype.removeCharacter = function( character ) {
   removeFromArray( character, this._characters );
+};
+
+Game.prototype.getCharacters = function() {
+  return this._characters;
+};
+
+// Enemy Array Functions -------------------------------------------------------
+Game.prototype.addEnemy = function( character ) {
+  this._enemies.push( character );
+}
+
+// Projectile Array Functions --------------------------------------------------
+Game.prototype.addProjectile = function( projectile ) {
+  this._projectiles.push( projectile );
 };
 
 Game.prototype.removeProjectile = function( projectile ) {
   removeFromArray( projectile, this._projectiles );
 };
 
+// Effect Array Functions ------------------------------------------------------
+Game.prototype.addEffect = function( effect ) {
+  this._effects.push( effect );
+};
+
 Game.prototype.removeEffect = function( effect ) {
   removeFromArray( effect, this._effects );
 };
 
-// Getters.
-Game.prototype.getCharacters = function() {
-  return this._characters;
-};
-
-// Update functions.
+// Update functions ------------------------------------------------------------
 Game.prototype.update = function() {
   this._currTime = Date.now();
   var elapsedTime = this._currTime - this._prevTime;
@@ -84,7 +91,7 @@ Game.prototype.tick = function() {
   this.draw();
 };
 
-// Drawing functions.
+// Drawing functions -----------------------------------------------------------
 Game.prototype.draw = function() {
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
@@ -102,7 +109,7 @@ Game.prototype.drawProjectiles = function() {
     this._projectiles[i].draw( this._ctx );
 };
 
-// Initialize game object.
+// Initialize game object ------------------------------------------------------
 Game.prototype.init = function() {
   // blue
   var char0 = new Character( 400, 400, 0, 0, 200, 1.0, 10 );
@@ -118,12 +125,13 @@ Game.prototype.init = function() {
   this.addCharacter( char1 );
 
   // green
-  var char2 = new Character( 400, 500, 0, 200, 0, 1.0, 10 );
+  var char2 = new Character( 400, 500, 0, 300, 0, 1.0, 10 );
   char2.setVelocity( 0, 0 );
-  char2.addWeapon( new BulletGun( char2, 1, 300, -1, 0.5 ) );
+  char2.addWeapon( new BulletGun( char2, 1, 100, 200, .9 ) );
   this.addCharacter( char2 );
 
 };
 
+// Start Game ------------------------------------------------------------------
 var _game = new Game();
 
