@@ -104,11 +104,11 @@ Game.prototype.drawProjectiles = function( ctx ) {
 // Initialize game object.
 Game.prototype.init = function() {
   var char0 = new Character( 200, 400, 44, 52, 56, 1.0, 20 );
-  char0.setVelocity( 0, 0 );
   this.addCharacter( char0 );
 
   var char1 = new Character( 200, 200, 240, 63, 53, 1.0, 20 );
   char1.setTeam( 1 );
+  char1.setVelocity( 0.25, 0.25 );
   char1.addWeapon( new BulletGun( char1, 1, 200, -1, 0.5, 27, 32, 37, 1.0, 3 ) );
   char1.addWeapon( new LaserGun( char1, 1, 200, 200, 240, 103, 93, 0.75 ) );
   this.addCharacter( char1 );

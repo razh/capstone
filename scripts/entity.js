@@ -6,16 +6,10 @@ var Entity = function( x, y ) {
   };
 
   this.lifeTime = 0;
-
-  this.velocity = {
-    x: 0.25,
-    y: 0.25
-  };
 };
 
 Entity.prototype.update = function( elapsedTime ) {
-  this.position.x += elapsedTime * this.velocity.x;
-  this.position.y += elapsedTime * this.velocity.y;
+  this.lifeTime += elapsedTime;
 };
 
 Entity.prototype.getX = function() {
@@ -38,7 +32,7 @@ Entity.prototype.getXY = function() {
   return {
     x: this.position.x,
     y: this.position.y
-  }
+  };
 };
 
 Entity.prototype.setXY = function( x, y ) {
@@ -46,11 +40,44 @@ Entity.prototype.setXY = function( x, y ) {
   this.position.y = y;
 };
 
-Entity.prototype.setVelocity = function( vx, vy ) {
+
+// PhysicsComponent ------------------------------------------------------------
+var PhysicsComponent = function( x, y ) {
+  Entity.call( this, x, y );
+
+  this.velocity = {
+    x: 0,
+    y: 0
+  };
+};
+
+PhysicsComponent.prototype = new Entity();
+PhysicsComponent.prototype.constructor = PhysicsComponent;
+
+PhysicsComponent.prototype.update = function( elapsedTime ) {
+  this.position.x += elapsedTime * this.velocity.x;
+  this.position.y += elapsedTime * this.velocity.y;
+};
+
+PhysicsComponent.prototype.setVelocity = function( vx, vy ) {
   this.velocity.x = vx;
   this.velocity.y = vy;
 };
 
+// CirclePhysicsEntity ---------------------------------------------------------
+var CirclePhysicsEntity = function( x, y, radius ) {
+
+};
+
+/*
+ctx.translate( this.physics.getX(), this.physics.getY() );
+this.graphics.draw( ctx );
+
+*/
+// RectPhysicsEntity -----------------------------------------------------------
+var RectPhysicsEntity = function( x, y, width, height ) {
+
+};
 
 // Shape -----------------------------------------------------------------------
 var Shape = function( x, y, red, green, blue, alpha ) {
@@ -62,21 +89,20 @@ var Shape = function( x, y, red, green, blue, alpha ) {
   this.alpha = alpha;
 };
 
+Shape.prototype = new Entity();
+Shape.prototype.constructor = Shape;
 
 // Circle ----------------------------------------------------------------------
 var Circle = function( x, y, red, green, blue, alpha, radius ) {
   Shape.call( this, x, y, red, green, blue, alpha );
   this.radius = radius;
-
-  this.lifeTime = 0;
-  this.maximumAge = 2000;
 };
 
-Circle.prototype = new Entity();
+Circle.prototype = new Shape();
 Circle.prototype.constructor = Circle;
 
 Circle.prototype.update = function( elapsedTime ) {
-  Entity.prototype.update.call( this, elapsedTime );
+  Shape.prototype.update.call( this, elapsedTime );
 
   if ( this.radius > this.getX() ) {
     this.setX( this.radius );
