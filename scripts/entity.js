@@ -136,55 +136,6 @@ RectPhysicsComponent.prototype.getAABB = function() {
   };
 };
 
-// Shape -----------------------------------------------------------------------
-var Shape = function( entity, x, y, red, green, blue, alpha ) {
-  Entity.call( this, x, y );
-
-  this.entity = entity;
-
-  this.red   = red;
-  this.green = green;
-  this.blue  = blue;
-  this.alpha = alpha;
-};
-
-Shape.prototype = new Entity();
-Shape.prototype.constructor = Shape;
-
-// Circle ----------------------------------------------------------------------
-var Circle = function( entity, x, y, red, green, blue, alpha, radius ) {
-  Shape.call( this, entity, x, y, red, green, blue, alpha );
-  this.radius = radius;
-};
-
-Circle.prototype = new Shape();
-Circle.prototype.constructor = Circle;
-
-Circle.prototype.draw = function( ctx ) {
-  // Avoid a negative radius which ctx.arc() can't handle.
-  if( this.radius < 0 )
-    return;
-
-  // Idiom for rounding floats.
-  // rounded = ( 0.5 + someNum ) << 0
-  ctx.beginPath();
-  ctx.arc(
-    ( 0.5 + this.getX() ) << 0,
-    ( 0.5 + this.getY() ) << 0,
-    ( 0.5 + this.radius ) << 0,
-    0,
-    Math.PI * 2,
-    true
-  );
-
-  ctx.fillStyle = 'rgba( ' + ( ( 0.5 + this.red )   << 0 ) +
-                  ', '     + ( ( 0.5 + this.green ) << 0 ) +
-                  ','      + ( ( 0.5 + this.blue )  << 0 ) +
-                  ','      + this.alpha + ' )';
-  ctx.fill();
-};
-
-
 // Character -------------------------------------------------------------------
 var Character = function( x, y, red, green, blue, alpha, radius ) {
   this.graphics = new Circle( this, 0, 0, red, green, blue, alpha, radius );
