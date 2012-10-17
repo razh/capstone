@@ -9,6 +9,7 @@ function onMouseMove( event ) {
   if ( trackMouse ) {
     _game._characters[0].physics.setXY( mouse.x, mouse.y );
   }
+  _game._characters[3].physics.segments[0].setXY( mouse.x, mouse.y );
 }
 
 function onMouseDown( event ) {

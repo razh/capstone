@@ -27,7 +27,15 @@ function removeFromArray( elem, array ) {
   if ( index !== -1 )
     array.splice( index, 1 );
 }
-
+Object.prototype.clone = function() {
+  var newObj = (this instanceof Array) ? [] : {};
+  for (i in this) {
+    if (i == 'clone') continue;
+    if (this[i] && typeof this[i] == "object") {
+      newObj[i] = this[i].clone();
+    } else newObj[i] = this[i]
+  } return newObj;
+};
 function direction( x0, y0, x1, y1 ) {
   return Math.atan2( y1 - y0, x1 - x0 );
 }

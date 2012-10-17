@@ -17,22 +17,21 @@ Hydra.prototype.getTeam = function() {
 
 Hydra.prototype.draw = function( ctx ) {
   var x, y, r;
-  for ( var i = 0; i < this.graphics.numSegments &&
-                   i < this.physics.numSegments; i++ ) {
-    // ctx.save();
-    // ctx.translate( this.physics.segments[i].getX(),
-    //                this.physics.segments[i].getY() );
-    // this.graphics.segments[i].draw( ctx );
-    // ctx.restore();
-    x = this.physics.segments[i].getX();
-    y = this.physics.segments[i].getY();
-    r = this.physics.segments[i].radius;
+  for ( var i = 0; i < this.physics.numSegments; i++ ) {
+    ctx.save();
+    ctx.translate( this.physics.segments[i].getX(),
+                   this.physics.segments[i].getY() );
+    this.graphics.segments[i].draw( ctx );
+    ctx.restore();
+    // x = this.physics.segments[i].getX();
+    // y = this.physics.segments[i].getY();
+    // r = this.physics.segments[i].radius;
 
-    ctx.beginPath();
-    ctx.arc( x, y, r, 0, Math.PI * 2, true );
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'red';
-    ctx.stroke();
+    // ctx.beginPath();
+    // ctx.arc( x, y, r, 0, Math.PI * 2, true );
+    // ctx.lineWidth = 1;
+    // ctx.strokeStyle = 'red';
+    // ctx.stroke();
   }
 };
 
@@ -49,11 +48,8 @@ var HydraGraphicsComponent = function( entity, x, y,
   this.numSegments = numSegments;
 
   for ( var i = 0; i < this.numSegments; i++ ) {
-    this.segments.push( segment );
+    this.segments.push( segment.clone() );
   }
-};
-
-HydraGraphicsComponent.prototype.draw = function( ctx ) {
 };
 
 
@@ -66,13 +62,15 @@ var HydraPhysicsComponent = function( entity, x, y,
   this.numSegments = numSegments;
   this.distance = distance;
 
+  console.log( segment );
+
   for ( var i = 0; i < this.numSegments; i++ ) {
-    this.segments.push( segment );
+    this.segments.push( segment.clone() );
   }
 };
 
 HydraPhysicsComponent.prototype.update = function( elapsedTime ) {
-  this.segments[0].update( elapsedTime );
+  // this.segments[0].update( elapsedTime );
 
   var x0, y0, x1, y1;
   var dx, dy;
@@ -95,6 +93,10 @@ HydraPhysicsComponent.prototype.update = function( elapsedTime ) {
       this.segments[ i + 1 ].setX( x0 + dx );
       this.segments[ i + 1 ].setY( y0 + dy );
     }
+  }
+
+  if ( this.segments[0].getX() === this.segments[1].getX() ) {
+    console.log( "same place" );
   }
 };
 
@@ -126,3 +128,8 @@ HydraPhysicsComponent.prototype.getIntersection = function() {
 //     opts: physOptions
 //   };
 // };
+
+var HydraSegment = function( graphics, physics ) {
+  this.graphics = graphics;
+  this.physics = physics;
+};
