@@ -116,6 +116,34 @@ Game.prototype.init = function() {
   var char2 = new Character( 400, 500, 240, 240, 211, 1.0, 20 );
   char2.addWeapon( new BulletGun( char2, 1, 1000, -1, 0.5, 27, 32, 37, 1.0, 3 ) );
   this.addCharacter( char2 );
+
+  // var hydraSegment = new HydraSegment(
+  //   Circle,
+  //   {
+  //     entity: undefined,
+  //     x: 0,
+  //     y: 0,
+  //     red: 100,
+  //     green: 100,
+  //     blue: 100,
+  //     alpha: 1.0,
+  //     radius: 10
+  //   },
+  //   CirclePhysicsComponent,
+  //   {
+  //     entity: undefined,
+  //     x: 0,
+  //     y: 0,
+  //     radius: 10
+  //   }
+  // );
+  var hydraSegment = new HydraSegment(
+    new Circle( undefined, 0, 0, 100, 100, 100, 1.0, 10 ),
+    new CirclePhysicsComponent( undefined, 0, 0, 10 )
+  );
+
+  var hydra = new Hydra( 0, 0, 10, hydraSegment, 20 );
+  this.addCharacter( hydra );
 };
 
 var _game = new Game();

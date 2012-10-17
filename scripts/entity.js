@@ -132,7 +132,7 @@ RectPhysicsComponent.prototype.getAABB = function() {
     x0: this.x - this.width / 2,
     y0: this.y - this.height / 2,
     x1: this.x - this.width / 2,
-    y1: this.y - this.height / 2,
+    y1: this.y - this.height / 2
   };
 };
 
