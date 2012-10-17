@@ -59,6 +59,7 @@ PhysicsComponent.prototype.setVelocity = function( vx, vy ) {
   this.velocity.y = vy;
 };
 
+
 // CirclePhysicsComponent ---------------------------------------------------------
 var CirclePhysicsComponent = function( entity, x, y, radius ) {
   PhysicsComponent.call( this, entity, x, y );
@@ -110,25 +111,29 @@ CirclePhysicsComponent.prototype.getIntersection = function( target ) {
   };
 };
 
-/*
-ctx.translate( this.physics.getX(), this.physics.getY() );
-this.graphics.draw( ctx );
 
-*/
 // RectPhysicsComponent -----------------------------------------------------------
 var RectPhysicsComponent = function( entity, x, y, width, height ) {
   PhysicsComponent.call( this, entity, x, y );
 
-  this.width = width;
+  this.width  = width;
   this.height = height;
 };
 
 RectPhysicsComponent.prototype = new PhysicsComponent();
 RectPhysicsComponent.prototype.constructor = RectPhysicsComponent;
 
-
 RectPhysicsComponent.prototype.update = function( elapsedTime ) {
   PhysicsComponent.prototype.update.call( this, elapsedTime );
+};
+
+RectPhysicsComponent.prototype.getAABB = function() {
+  return {
+    x0: this.x - this.width / 2,
+    y0: this.y - this.height / 2,
+    x1: this.x - this.width / 2,
+    y1: this.y - this.height / 2,
+  };
 };
 
 // Shape -----------------------------------------------------------------------
