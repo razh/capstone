@@ -4,18 +4,6 @@ var Entity = function( x, y ) {
     x: x,
     y: y
   };
-
-  this.lifeTime = 0;
-
-  this.velocity = {
-    x: 0.25,
-    y: 0.25
-  };
-};
-
-Entity.prototype.update = function( elapsedTime ) {
-  this.position.x += elapsedTime * this.velocity.x;
-  this.position.y += elapsedTime * this.velocity.y;
 };
 
 Entity.prototype.getX = function() {
@@ -38,7 +26,7 @@ Entity.prototype.getXY = function() {
   return {
     x: this.position.x,
     y: this.position.y
-  }
+  };
 };
 
 Entity.prototype.setXY = function( x, y ) {
@@ -46,37 +34,54 @@ Entity.prototype.setXY = function( x, y ) {
   this.position.y = y;
 };
 
-Entity.prototype.setVelocity = function( vx, vy ) {
+
+// PhysicsComponent ------------------------------------------------------------
+var PhysicsComponent = function( entity, x, y ) {
+  Entity.call( this, x, y );
+
+  this.entity = entity;
+  this.velocity = {
+    x: 0,
+    y: 0
+  };
+
+  this.rotation = 0;
+};
+
+PhysicsComponent.prototype = new Entity();
+PhysicsComponent.prototype.constructor = PhysicsComponent;
+
+PhysicsComponent.prototype.update = function( elapsedTime ) {
+  this.position.x += elapsedTime * this.velocity.x;
+  this.position.y += elapsedTime * this.velocity.y;
+};
+
+PhysicsComponent.prototype.setVelocity = function( vx, vy ) {
   this.velocity.x = vx;
   this.velocity.y = vy;
 };
 
+PhysicsComponent.prototype.rotate = function( radians ) {
+  this.rotation = ( this.rotation + radians ) % ( Math.PI * 2 );
+};
 
-// Shape -----------------------------------------------------------------------
-var Shape = function( x, y, red, green, blue, alpha ) {
-  Entity.call( this, x, y );
-
-  this.red = red;
-  this.green = green;
-  this.blue = blue;
-  this.alpha = alpha;
+PhysicsComponent.prototype.setRotation = function( radians ) {
+  this.rotation = radians % ( Math.PI * 2 );
 };
 
 
-// Circle ----------------------------------------------------------------------
-var Circle = function( x, y, red, green, blue, alpha, radius ) {
-  Shape.call( this, x, y, red, green, blue, alpha );
+// CirclePhysicsComponent ---------------------------------------------------------
+var CirclePhysicsComponent = function( entity, x, y, radius ) {
+  PhysicsComponent.call( this, entity, x, y );
+
   this.radius = radius;
-
-  this.lifeTime = 0;
-  this.maximumAge = 2000;
 };
 
-Circle.prototype = new Entity();
-Circle.prototype.constructor = Circle;
+CirclePhysicsComponent.prototype = new PhysicsComponent();
+CirclePhysicsComponent.prototype.constructor = CirclePhysicsComponent;
 
-Circle.prototype.update = function( elapsedTime ) {
-  Entity.prototype.update.call( this, elapsedTime );
+CirclePhysicsComponent.prototype.update = function( elapsedTime ) {
+  PhysicsComponent.prototype.update.call( this, elapsedTime );
 
   if ( this.radius > this.getX() ) {
     this.setX( this.radius );
@@ -96,25 +101,7 @@ Circle.prototype.update = function( elapsedTime ) {
   }
 };
 
-Circle.prototype.draw = function( ctx ) {
-  ctx.beginPath();
-  ctx.arc(
-    Math.round( this.getX() ),
-    Math.round( this.getY() ),
-    Math.round( this.radius ),
-    0,
-    Math.PI * 2,
-    true
-  );
-
-  ctx.fillStyle = 'rgba( ' + Math.round( this.red )   +
-                  ', '     + Math.round( this.green ) +
-                  ','      + Math.round( this.blue )  +
-                  ','      + this.alpha + ' )';
-  ctx.fill();
-};
-
-Circle.prototype.getIntersection = function( target ) {
+CirclePhysicsComponent.prototype.getIntersection = function( target ) {
   var x0 = this.getX(),
       y0 = this.getY(),
       r0 = this.radius,
@@ -135,9 +122,34 @@ Circle.prototype.getIntersection = function( target ) {
 };
 
 
+// RectPhysicsComponent -----------------------------------------------------------
+var RectPhysicsComponent = function( entity, x, y, width, height ) {
+  PhysicsComponent.call( this, entity, x, y );
+
+  this.width  = width;
+  this.height = height;
+};
+
+RectPhysicsComponent.prototype = new PhysicsComponent();
+RectPhysicsComponent.prototype.constructor = RectPhysicsComponent;
+
+RectPhysicsComponent.prototype.update = function( elapsedTime ) {
+  PhysicsComponent.prototype.update.call( this, elapsedTime );
+};
+
+RectPhysicsComponent.prototype.getAABB = function() {
+  return {
+    x0: this.x - this.width / 2,
+    y0: this.y - this.height / 2,
+    x1: this.x - this.width / 2,
+    y1: this.y - this.height / 2
+  };
+};
+
 // Character -------------------------------------------------------------------
 var Character = function( x, y, red, green, blue, alpha, radius ) {
-  Circle.call( this, x, y, red, green, blue, alpha, radius );
+  this.graphics = new Circle( this, 0, 0, red, green, blue, alpha, radius );
+  this.physics  = new CirclePhysicsComponent( this, x, y, radius );
 
   this.weapons = [];
 
@@ -150,11 +162,8 @@ var Character = function( x, y, red, green, blue, alpha, radius ) {
   this.team = 0;
 };
 
-Character.prototype = new Circle();
-Character.prototype.constructor = Character;
-
 Character.prototype.update = function( elapsedTime ) {
-  Circle.prototype.update.call( this, elapsedTime );
+  this.physics.update( elapsedTime );
 
   if ( this.weapons !== null && this.weapons.length > 0 ) {
     var enemy = this.getNearestEntity( _game.getCharacters() );
@@ -166,6 +175,17 @@ Character.prototype.update = function( elapsedTime ) {
   }
 };
 
+Character.prototype.draw = function( ctx ) {
+  ctx.save();
+
+  ctx.translate( this.physics.getX(), this.physics.getY() );
+  this.graphics.draw( ctx );
+
+  ctx.restore();
+};
+
+
+// TODO: Move to physics component.
 Character.prototype.getNearestEntity = function( entities ) {
   var entity;
   var distance = Number.MAX_VALUE;
@@ -185,10 +205,10 @@ Character.prototype.getNearestEntity = function( entities ) {
 };
 
 Character.prototype.distanceToEntity = function( entity ) {
-  return Math.sqrt( ( this.getX() - entity.getX() ) *
-                    ( this.getX() - entity.getX() ) +
-                    ( this.getY() - entity.getY() ) *
-                    ( this.getY() - entity.getY() ) );
+  return Math.sqrt( ( this.physics.getX() - entity.physics.getX() ) *
+                    ( this.physics.getX() - entity.physics.getX() ) +
+                    ( this.physics.getY() - entity.physics.getY() ) *
+                    ( this.physics.getY() - entity.physics.getY() ) );
 };
 
 Character.prototype.hit = function() {
@@ -197,14 +217,18 @@ Character.prototype.hit = function() {
     // Effects chain. Nasty syntax, but it works.
     _game.addEffect(
       new Effect(
-        this,
+        this.graphics,
         {
           radius: 15,
           red: 200
         },
         50,
         Easing.easeInOutCubic,
-        undefined,
+        // Step. Set physics radius to graphics radius.
+        (function() {
+          this.object.entity.physics.radius = this.object.radius;
+        }),
+        // Complete.
         (function() {
           return {
             effect: new Effect(
@@ -215,9 +239,13 @@ Character.prototype.hit = function() {
               },
               150,
               Easing.linear,
-              undefined,
+              // Step.
               (function() {
-                this.isHit = false;
+                this.object.entity.physics.radius = this.object.radius;
+              }),
+              // Complete.
+              (function() {
+                this.entity.isHit = false;
                 return {
                   effect: undefined
                 };
