@@ -118,12 +118,12 @@ Game.prototype.init = function() {
   this.addCharacter( char2 );
 
   var hydraSegment = new HydraSegment(
-    // new Circle( undefined, 0, 0, 180, 100, 100, 1.0, 5 ),
-    new Rectangle( undefined, 0, 0, 100, 100, 200, 1.0, 10, 10 ),
-    new CirclePhysicsComponent( undefined, 0, 0, 5 )
+    new Circle( undefined, 0, 0, 180, 100, 100, 1.0, 7 ),
+    // new Rectangle( undefined, 0, 0, 100, 100, 200, 1.0, 10, 10 ),
+    new CirclePhysicsComponent( undefined, 0, 0, 7 )
   );
 
-  var hydra = new Hydra( 0, 0, 20, hydraSegment, 20 );
+  var hydra = new Hydra( 0, 0, 20, hydraSegment, 28 );
   this.addCharacter( hydra );
 };
 
