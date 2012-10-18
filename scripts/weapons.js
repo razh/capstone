@@ -29,7 +29,7 @@ Weapon.prototype.setTarget = function( x, y ) {
 
 Weapon.prototype.setEntityAsTarget = function( entity ) {
   if ( entity !== null && entity !== undefined ) {
-    this.setTarget( entity.getX(), entity.getY() );
+    this.setTarget( entity.physics.getX(), entity.physics.getY() );
   } else {
     this.setTarget( Number.NaN, Number.NaN );
   }
@@ -48,10 +48,14 @@ Weapon.prototype.targetInRange = function() {
   if ( this.range === -1 )
     return true;
 
-  return this.range >= Math.sqrt( ( this.target.x - this.entity.getX() ) *
-                                  ( this.target.x - this.entity.getX() ) +
-                                  ( this.target.y - this.entity.getY() ) *
-                                  ( this.target.y - this.entity.getY() ) );
+  return this.range >= Math.sqrt( ( this.target.x -
+                                    this.entity.physics.getX() ) *
+                                  ( this.target.x -
+                                    this.entity.physics.getX() ) +
+                                  ( this.target.y -
+                                    this.entity.physics.getY() ) *
+                                  ( this.target.y -
+                                   this.entity.physics.getY() ) );
 };
 
 
@@ -77,7 +81,6 @@ Gun.prototype.fire = function() {};
 
 
 // BulletGun -------------------------------------------------------------------
-
 var BulletGun = function( entity, damage, rate, range, speed,
                           red, green, blue, alpha, radius ) {
   Gun.call( this, entity, damage, rate, range );
@@ -97,8 +100,8 @@ BulletGun.prototype.constructor = BulletGun;
 
 BulletGun.prototype.fire = function() {
   var bullet = new Bullet(
-    this.entity.getX(),
-    this.entity.getY(),
+    this.entity.physics.getX(),
+    this.entity.physics.getY(),
     this.red,
     this.green,
     this.blue,
@@ -107,15 +110,15 @@ BulletGun.prototype.fire = function() {
     this.entity.team
   );
 
-  bullet.velocity.x = this.target.x - this.entity.getX();
-  bullet.velocity.y = this.target.y - this.entity.getY();
+  bullet.physics.velocity.x = this.target.x - this.entity.physics.getX();
+  bullet.physics.velocity.y = this.target.y - this.entity.physics.getY();
 
-  var magnitude = Math.sqrt( bullet.velocity.x *
-                             bullet.velocity.x +
-                             bullet.velocity.y *
-                             bullet.velocity.y );
-  bullet.velocity.x /= magnitude / this.speed;
-  bullet.velocity.y /= magnitude / this.speed;
+  var magnitude = Math.sqrt( bullet.physics.velocity.x *
+                             bullet.physics.velocity.x +
+                             bullet.physics.velocity.y *
+                             bullet.physics.velocity.y );
+  bullet.physics.velocity.x /= magnitude / this.speed;
+  bullet.physics.velocity.y /= magnitude / this.speed;
 
   _game.addProjectile( bullet );
 
@@ -125,17 +128,15 @@ BulletGun.prototype.fire = function() {
 
 // Bullet ----------------------------------------------------------------------
 var Bullet = function( x, y, red, green, blue, alpha, radius, team ) {
-  Circle.call( this, x, y, red, green, blue, alpha, radius );
+  this.graphics = new Circle( this, 0, 0, red, green, blue, alpha, radius );
+  this.physics  = new CirclePhysicsComponent( this, x, y, radius );
 
   this.collides = true;
   this.team     = team;
 };
 
-Bullet.prototype = new Circle();
-Bullet.prototype.constructor = Bullet;
-
 Bullet.prototype.update = function( elapsedTime ) {
-  Circle.prototype.update.call( this, elapsedTime );
+  this.physics.update( elapsedTime );
 
   var removeBullet = false;
   if ( this.collides ) {
@@ -144,11 +145,15 @@ Bullet.prototype.update = function( elapsedTime ) {
     var characters = _game.getCharacters();
     for ( i = characters.length - 1; i >= 0; i-- ) {
       if ( characters[i].getTeam() !== this.team ) {
-        distance = Math.sqrt( ( this.getX() - characters[i].getX() ) *
-                              ( this.getX() - characters[i].getX() ) +
-                              ( this.getY() - characters[i].getY() ) *
-                              ( this.getY() - characters[i].getY() ) );
-        if ( distance < this.radius + characters[i].radius ) {
+        distance = Math.sqrt( ( this.physics.getX() -
+                                characters[i].physics.getX() ) *
+                              ( this.physics.getX() -
+                                characters[i].physics.getX() ) +
+                              ( this.physics.getY() -
+                                characters[i].physics.getY() ) *
+                              ( this.physics.getY() -
+                                characters[i].physics.getY() ) );
+        if ( distance < this.physics.radius + characters[i].physics.radius ) {
           characters[i].hit();
           removeBullet = true;
         }
@@ -163,20 +168,20 @@ Bullet.prototype.update = function( elapsedTime ) {
   }
 
   if ( removeBullet ) {
-    this.setVelocity( 0, 0 );
+    this.physics.setVelocity( 0, 0 );
     this.collides = false;
     _game.addEffect(
       new Effect(
-        this,
+        this.graphics,
         {
           radius: 5,
-          alpha: -1.0,
+          alpha: -1.0
         },
         500,
         Easing.easeOutQuad,
         undefined,
         (function() {
-          _game.removeProjectile( this );
+          _game.removeProjectile( this.entity );
           return {
             effect: undefined
           };
@@ -184,6 +189,15 @@ Bullet.prototype.update = function( elapsedTime ) {
       )
     );
   }
+};
+
+Bullet.prototype.draw = function( ctx ) {
+  ctx.save();
+
+  ctx.translate( this.physics.getX(), this.physics.getY() );
+  this.graphics.draw( ctx );
+
+  ctx.restore();
 };
 
 
@@ -224,7 +238,10 @@ LaserGun.prototype.update = function( elapsedTime ) {
 };
 
 LaserGun.prototype.fire = function() {
-  var point = this.targetEntity.getIntersection( this.entity.getXY() );
+  var point = this.targetEntity.physics.getIntersection(
+    this.entity.physics.getXY()
+  );
+
   this.beam.x = point.x;
   this.beam.y = point.y;
 
@@ -263,7 +280,7 @@ LaserBeam.prototype.draw = function( ctx ) {
                     ','      + this.alpha + ' )';
   ctx.lineWidth = 3;
 
-  var point = this.entity.getIntersection({
+  var point = this.entity.physics.getIntersection({
     x: this.x,
     y: this.y
   });
