@@ -9,6 +9,7 @@ var Hydra = function( x, y, numSegments, segment, distance, team ) {
   this.team = team;
 
   this.physics.segments[0].setVelocity( 0.25, 0.25 );
+  this.physics.segments[0].setRotation( Math.PI / 4 );
 };
 
 Hydra.prototype.getTeam = function() {
@@ -21,17 +22,9 @@ Hydra.prototype.draw = function( ctx ) {
     ctx.save();
     ctx.translate( this.physics.segments[i].getX(),
                    this.physics.segments[i].getY() );
+    ctx.rotate( this.physics.segments[i].rotation );
     this.graphics.segments[i].draw( ctx );
     ctx.restore();
-    // x = this.physics.segments[i].getX();
-    // y = this.physics.segments[i].getY();
-    // r = this.physics.segments[i].radius;
-
-    // ctx.beginPath();
-    // ctx.arc( x, y, r, 0, Math.PI * 2, true );
-    // ctx.lineWidth = 1;
-    // ctx.strokeStyle = 'red';
-    // ctx.stroke();
   }
 };
 
@@ -94,10 +87,6 @@ HydraPhysicsComponent.prototype.update = function( elapsedTime ) {
       this.segments[ i + 1 ].setY( y0 + dy );
     }
   }
-
-  if ( this.segments[0].getX() === this.segments[1].getX() ) {
-    console.log( "same place" );
-  }
 };
 
 HydraPhysicsComponent.prototype.getX = function() {
@@ -116,19 +105,7 @@ HydraPhysicsComponent.prototype.getIntersection = function() {
 };
 
 
-// // HydraSegment ----------------------------------------------------------------
-// var HydraSegment = function( gfxPrototype, gfxOptions,
-//                              physPrototype, physOptions ) {
-//   this.graphics = {
-//     proto: gfxPrototype,
-//     opts: gfxOptions
-//   };
-//   this.physics = {
-//     proto: physPrototype,
-//     opts: physOptions
-//   };
-// };
-
+// HydraSegment ----------------------------------------------------------------
 var HydraSegment = function( graphics, physics ) {
   this.graphics = graphics;
   this.physics = physics;

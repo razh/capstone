@@ -44,6 +44,8 @@ var PhysicsComponent = function( entity, x, y ) {
     x: 0,
     y: 0
   };
+
+  this.rotation = 0;
 };
 
 PhysicsComponent.prototype = new Entity();
@@ -57,6 +59,14 @@ PhysicsComponent.prototype.update = function( elapsedTime ) {
 PhysicsComponent.prototype.setVelocity = function( vx, vy ) {
   this.velocity.x = vx;
   this.velocity.y = vy;
+};
+
+PhysicsComponent.prototype.rotate = function( radians ) {
+  this.rotation = ( this.rotation + radians ) % ( Math.PI * 2 );
+};
+
+PhysicsComponent.prototype.setRotation = function( radians ) {
+  this.rotation = radians % ( Math.PI * 2 );
 };
 
 

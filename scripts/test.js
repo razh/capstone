@@ -14,6 +14,23 @@ window.requestAnimFrame = (function() {
          };
 })();
 
+// Cloning function taken from:
+// http://my.opera.com/GreyWyvern/blog/show.dml/1725165
+Object.prototype.clone = function() {
+  var newObj = ( this instanceof Array ) ? [] : {};
+
+  for ( var i in this ) {
+    if ( i === 'clone' ) continue;
+    if ( this[i] && typeof this[i] === 'object' ) {
+      newObj[i] = this[i].clone();
+    } else {
+      newObj[i] = this[i];
+    }
+  }
+
+  return newObj;
+};
+
 function inArray( elem, array ) {
   for ( var i = array.length - 1; i >= 0; i-- )
     if ( array[i] === elem )
@@ -27,15 +44,7 @@ function removeFromArray( elem, array ) {
   if ( index !== -1 )
     array.splice( index, 1 );
 }
-Object.prototype.clone = function() {
-  var newObj = (this instanceof Array) ? [] : {};
-  for (i in this) {
-    if (i == 'clone') continue;
-    if (this[i] && typeof this[i] == "object") {
-      newObj[i] = this[i].clone();
-    } else newObj[i] = this[i]
-  } return newObj;
-};
+
 function direction( x0, y0, x1, y1 ) {
   return Math.atan2( y1 - y0, x1 - x0 );
 }

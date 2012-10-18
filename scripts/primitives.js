@@ -14,6 +14,7 @@ var Shape = function( entity, x, y, red, green, blue, alpha ) {
 Shape.prototype = new Entity();
 Shape.prototype.constructor = Shape;
 
+
 // Circle ----------------------------------------------------------------------
 var Circle = function( entity, x, y, red, green, blue, alpha, radius ) {
   Shape.call( this, entity, x, y, red, green, blue, alpha );
@@ -67,7 +68,7 @@ Rectangle.prototype.draw = function( ctx ) {
                   ', '     + ( ( 0.5 + this.green ) << 0 ) +
                   ','      + ( ( 0.5 + this.blue )  << 0 ) +
                   ','      + this.alpha + ' )';
-  ctx.fillRect();
+  ctx.fillRect( 0, 0, this.width, this.height );
 };
 
 // Line ------------------------------------------------------------------------
