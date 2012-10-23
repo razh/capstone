@@ -5,11 +5,12 @@ function onMouseMove( event ) {
     x: event.pageX - _game._canvas.offsetLeft,
     y: event.pageY - _game._canvas.offsetTop
   };
-  // event.pageY -= _game._canvas.offsetTop;
-
+  //event.pageY -= _game._canvas.offsetTop;
+  /*
   if ( trackMouse ) {
     _game._characters[0].setXY( mouse.x, mouse.y )
   }
+  */
 }
 
 function onMouseDown( event ) {
@@ -19,12 +20,50 @@ function onMouseDown( event ) {
   };
 
   trackMouse = !trackMouse;
+  /*
   if ( trackMouse ) {
     _game._canvas.style.cursor = 'none';
-    //_game._characters[0].setXY( mouse.x, mouse.y )
+    _game._characters[0].setXY( mouse.x, mouse.y )
   } else {
     _game._canvas.style.cursor = 'default';
   }
+  */
+  
+}
+
+function onMouseUp( event ) {
+  var mouse = {
+    x: event.pageX - _game._canvas.offsetLeft,
+    y: event.pageY - _game._canvas.offsetTop
+  };
+
+  console.log( _game.game_keycode);
+  // green
+  if ( _game.game_keycode == 71 ) {
+    var char2 = new Character( mouse.x, mouse.y, 0, 300, 0, 1.0, 10 );
+    char2.setVelocity( 0, 0 );
+    char2.addWeapon( new BulletGun( char2, 1, 100, 200, 1 ) );1
+    _game.addCharacter( char2 );1
+  }
+
+  if ( _game.game_keycode == 82 ) {
+    // red
+    var char1 = new Character( mouse.x, mouse.y, 200, 0, 0, 1.0, 10 );
+    char1.setTeam( 1 );
+    char1.setVelocity (.25,0);
+    //char1.addWeapon( new BulletGun( char1, 1, 200, -1, 0.5 ) );
+    //char1.addWeapon( new LaserGun( char1, 1, 200, 200, 255, 200, 200, 1.0 ) );
+    _game.addCharacter( char1 );
+  }
+
+  if ( _game.game_keycode == 66 ) {
+    // blue
+    var char0 = new Character( 400, 400, 0, 0, 200, 1.0, 10 );
+    //char0.setVelocity( 0, 0 );
+    //char0.addWeapon( new LaserGun( char0, 1, 200, 200, 255, 200, 200, 1.0 ) );
+    _game.addCharacter( char0 );
+  }
+  _game.game_keycode = 0 ;
 }
 
 function draw() {
@@ -103,7 +142,6 @@ function direction( x0, y0, x1, y1 ) {
   return Math.atan2( y1 - y0, x1 - x0 );
 }
 
-
 function loop() {
   if ( !running )
     return;
@@ -117,7 +155,9 @@ function init() {
 
   _game._canvas.addEventListener( 'mousedown', onMouseDown, null );
   _game._canvas.addEventListener( 'mousemove', onMouseMove, null );
+  _game._canvas.addEventListener( 'mouseup', onMouseUp, null  );
   document.addEventListener( 'keydown', (function ( event ) {
+    _game.game_keycode = event.keyCode;
     if ( event.keyCode === 81 )
       quit();
   }), null );
@@ -130,6 +170,7 @@ function quit() {
 
   _game._canvas.removeEventListener( 'mousedown', onMouseDown );
   _game._canvas.removeEventListener( 'mousemove', onMouseMove );
+  _game._canvas.removeEventListener( 'mouseup', onMouseUp );
 }
 
 var running = true;

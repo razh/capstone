@@ -4,6 +4,7 @@ var BulletGun = function( entity, damage, rate, range, speed ) {
   Gun.call( this, entity, damage, rate, range );
 
   this.speed  = speed;
+
 };
 
 BulletGun.prototype = new Gun();
@@ -15,9 +16,10 @@ BulletGun.prototype.fire = function() {
     this.entity.y,
     0, 0, 0, 1.0,
     2,
-    this.entity.range,
+    this.range,
     this.entity.team
   );
+  
 
   bullet.velocity.x = this.target.x - this.entity.x;
   bullet.velocity.y = this.target.y - this.entity.y;
@@ -34,13 +36,16 @@ BulletGun.prototype.fire = function() {
   this.firing = false;
 };
 
-
 // Bullet ----------------------------------------------------------------------
 var Bullet = function( x, y, red, green, blue, alpha, radius, range, team ) {
   Circle.call( this, x, y, red, green, blue, alpha, radius );
 
-  var originalx = x;
-  var originaly = y;
+  var originalx;
+  this.originalx = this.x;
+  var originaly;
+  this.originaly = this.y;
+  this.range = range;
+
 
   this.collides = true;
   this.team     = team;
@@ -67,6 +72,8 @@ Bullet.prototype.update = function( elapsedTime ) {
         if ( distance < this.radius + characters[i].radius ) {
           characters[i].hit();
           removeBullet = true;
+          _game.game_score += 1;
+          console.log(_game.game_score);
         }
       }
     }
@@ -81,6 +88,7 @@ Bullet.prototype.update = function( elapsedTime ) {
   // Check if bullet is at the end of weapon range
   if ( distance >= this.range )
   {
+    //console.log('Out of Range');
     removeBullet = true;
   }
 
@@ -89,6 +97,7 @@ Bullet.prototype.update = function( elapsedTime ) {
   } else {
     this.lifeTime += elapsedTime;
   }
+  
 
   if ( removeBullet ) {
     this.setVelocity( 0, 0 );

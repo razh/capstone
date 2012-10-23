@@ -1,5 +1,5 @@
 // LaserGun --------------------------------------------------------------------
-var LaserGun = function( entity, damage, rate, range,
+var LaserGun = function ( entity, damage, rate, range,
                          red, green, blue, alpha ) {
   Gun.call( this, entity, damage, rate, range );
 
@@ -40,6 +40,8 @@ LaserGun.prototype.fire = function() {
   this.beam.y = point.y;
 
   this.targetEntity.hit();
+  _game.game_score += 1;
+  console.log(_game.game_score);
 
   if ( !this.drawingBeam ) {
     _game.addProjectile( this.beam );

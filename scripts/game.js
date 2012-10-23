@@ -10,8 +10,9 @@ var Game = function() {
   this.WIDTH  = window.innerWidth;
   this.HEIGHT = window.innerHeight;
 
-  // this._canvas.style.padding = '0px 0px';
+  this._canvas.style.padding = '0px 0px';
   this._canvas.style.backgroundColor = '#C8C8C8';
+
   this._canvas.width  = this.WIDTH;
   this._canvas.height = this.HEIGHT;
 
@@ -22,6 +23,10 @@ var Game = function() {
   this._enemies     = [];
   this._projectiles = [];
   this._effects     = [];
+
+  this.game_score = 0;
+  this.game_keycode = 0;
+
 };
 
 // Character Array Functions ---------------------------------------------------
@@ -109,8 +114,23 @@ Game.prototype.drawProjectiles = function() {
     this._projectiles[i].draw( this._ctx );
 };
 
+Game.prototype.LoadEnemies = function () {
+
+  // red
+  
+};
+
 // Initialize game object ------------------------------------------------------
 Game.prototype.init = function() {
+
+  var img1 = document.createElement("img");
+  img1.src = "Assets/Terrain/Black Theme/Black Tile.jpg";
+
+
+  var src = document.body;
+  src.appendChild(img1);
+
+/*
   // blue
   var char0 = new Character( 400, 400, 0, 0, 200, 1.0, 10 );
   char0.setVelocity( 0, 0 );
@@ -127,9 +147,24 @@ Game.prototype.init = function() {
   // green
   var char2 = new Character( 400, 500, 0, 300, 0, 1.0, 10 );
   char2.setVelocity( 0, 0 );
-  char2.addWeapon( new BulletGun( char2, 1, 100, 200, .9 ) );
-  this.addCharacter( char2 );
+  char2.addWeapon( new BulletGun( char2, 1, 100, 200, 1 ) );1
+  this.addCharacter( char2 );1
+*/
 
+  this.addCharacter(new Character( 400, 400, 0, 0, 200, 1.0, 10 ));
+  //this._characters[0].addWeapon( new LaserGun( this._characters[0], 1, 200, 200, 255, 200, 200,
+  // 1.0 ) );
+
+  
+  
+  // red
+  var char1 = new Character( 200, 200, 200, 0, 0, 1.0, 10 );
+  char1.setTeam( 1 );
+  char1.setVelocity(.5,0);
+  //char1.addWeapon( new BulletGun( char1, 1, 200, -1, 0.5 ) );
+  char1.addWeapon( new LaserGun( char1, 1, 200, 200, 255, 200, 200, 1.0 ) );
+  this.addCharacter( char1 );
+  
 };
 
 // Start Game ------------------------------------------------------------------
